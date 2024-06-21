@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+body {
+	background-color: var(--bg-0);
+}
+#container {
+    display: flex;
+    font-family: var(--font-pretendard);
+    flex-direction: row;
+    min-height: 1100px;
+}
+#container-left {
+	width: 17%;
+    min-width: 310px;
+	background-color: white;
+}
+#container-right {
+	width: 83%;
+    min-width: 1060px;
+    display: flex;
+	flex-direction: column;
+	gap: var(--gap-layout-2);
+	padding: 0 var(--pd-box);
+	background-color: var(--bg-0);
+    padding-bottom: 47px;
+}
+
+section {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-layout-1);
+	padding-bottom: var(--pd-box);
+	height: -webkit-fill-available;
+}

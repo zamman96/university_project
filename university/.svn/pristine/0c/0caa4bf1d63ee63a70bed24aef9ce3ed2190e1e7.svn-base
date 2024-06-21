@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="course">
+
+	<!-- 시간표 (교수) -->
+	<select id="lecturetable" parameterType="lecVo" resultType="lecVo">
+		select *
+		from lecture c, subject s, lec_time a
+		where c.subject_id=s.subject_id
+		and c.subject_id=a.subject_id
+		and c.year=a.year
+		and c.term=a.term
+		and
+		c.pro_id=#{pro_id}
+		and c.year=#{year}
+		and c.term=#{term}
+		order by time_class, time_week desc
+	</select>
+	
+	<!-- 시간표 (학생) -->
+	<select id="timetable" parameterType="cVo" resultType="lecVo">
+		select *
+		from course c, subject s, lec_time a
+		where c.subject_id=s.subject_id
+		and c.subject_id=a.subject_id
+		and c.year=a.year
+		and c.term=a.term
+		and
+		c.stu_id=#{stu_id}
+		and c.year=#{year}
+		and c.term=#{term}
+		order by time_class, time_week desc
+	</select>
+
+<!-- 수강 신청 시작 -->
+	<!-- 학생의 학과와 학년 정보를 받아 추천해주는 것 -->
+	<select id="recommend" parameterType="cVo" resultType="lecVo">
+		select
+		distinct a.subject_id, b.subject_type, b.subject_credit,
+		b.subject_grade, c.major_name, b.subject_name,
+		d.mem_name, e.time_id,
+		e.room_id, e.room_num, a.lec_count, a.year, a.term
+		from lecture a
+		left
+		outer
+		join subject b on a.subject_id=b.subject_id
+		left outer join major
+		c on
+		b.major_id=c.major_id
+		left outer join member d on d.mem_id=a.pro_id
+		left outer join lec_time e on a.year=e.year and a.term=e.term and
+		a.subject_id=e.subject_id
+		where b.subject_grade in (select stu_grade
+		from student
+		where stu_id=#{stu_id})
+		and b.major_id in (select major_id
+		from student
+		where stu_id=#{stu_id})
+		and a.year=#{year}
+		and
+		a.term=#{term}
+		order by
+		b.subject_name
+	</select>
+
+	<!-- 강의 검색 -->
+	<sql id="dynamicMajor">
+		<if test="major_id > 0">
+			and c.major_id = #{major_id}
+		</if>
+	</sql>
+	<sql id="dynamicCol">
+		<if test="col_id > 0">
+			and c.col_id = #{col_id}
+		</if>
+	</sql>
+	<sql id="dynamicCredit">
+		<if test="subject_credit > 0">
+			and b.subject_credit=#{subject_credit}
+		</if>
+	</sql>
+	<sql id="dynamicGrade">
+		<if test="subject_grade > 0">
+			and b.subject_grade=#{subject_grade}
+		</if>
+	</sql>
+	<sql id="dynamicType">
+		<if test="subject_type != null and subject_type != ''">
+			and b.subject_type=#{subject_type}
+		</if>
+	</sql>
+	<sql id="dynamicName">
+		<if test="subject_name != null and subject_name != ''">
+			and b.subject_name like '%' || #{subject_name} || '%'
+		</if>
+	</sql>
+
+	<select id="searchLecture" parameterType="lecVo"
+		resultType="lecVo">
+		select distinct subject_id, subject_type, subject_credit,
+		subject_grade, major_name, subject_name,
+		mem_name, time_id, room_id,
+		room_num, lec_count, year, term
+		from (
+		select a.subject_id,
+		b.subject_type, b.subject_credit,
+		b.subject_grade, c.major_name,
+		b.subject_name,
+		d.mem_name, e.time_id, e.room_id, e.room_num,
+		a.lec_count, a.year, a.term, ROWNUM rs
+		from lecture a
+		left outer join
+		subject b on a.subject_id=b.subject_id
+		left outer join major c on
+		b.major_id=c.major_id
+		left outer join member d on d.mem_id=a.pro_id
+		left outer join lec_time e on a.year=e.year and a.term=e.term and
+		a.subject_id=e.subject_id
+		where a.year=#{year}
+		and a.term=#{term}
+		<include refid="dynamicType" />
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicGrade" />
+		<include refid="dynamicCredit" />
+		<include refid="dynamicName" />
+		order by
+		b.subject_name
+		 <![CDATA[) where rs <= 150
+		  ]]>
+	</select>
+
+	<!-- 해당학기의 학점을 계산해주는 문 -->
+	<select id="creditSum" parameterType="cVo" resultType="int">
+		select
+		sum(a.subject_credit)
+		from subject a, course b
+		where
+		a.subject_id=b.subject_id
+		and b.stu_id=#{stu_id}
+		and b.year=#{year}
+		and
+		b.term=#{term}
+	</select>
+
+	<!-- 현재 수강하는 인원 수 -->
+	<select id="currentCount" resultType="int" parameterType="lecVo">
+		select
+		count(*)
+		from course
+		where subject_id=#{subject_id}
+		and year=#{year}
+		and
+		term=#{term}
+	</select>
+
+	<!-- 수강한 리스트 -->
+	<select id="courseList" parameterType="cVo" resultType="lecVo">
+		select
+		distinct
+		s.subject_id, s.subject_type, s.subject_credit,
+		s.subject_grade, m.major_name, s.subject_name, p.mem_name,
+		t.time_id,
+		t.room_id, t.room_num
+		from course c, subject s, lecture l , major m,
+		lec_time t, member p
+		where c.subject_id = s.subject_id
+		and c.subject_id = l.subject_id
+		and l.pro_id = p.mem_id
+		and t.year = l.year
+		and t.term = l.term
+		and t.subject_id = l.subject_id
+		and s.major_id = m.major_id
+		and c.year = l.year
+		and c.term = l.term
+		and c.stu_id=#{stu_id}
+		and
+		c.year=#{year}
+		and c.term=#{term}
+	</select>
+
+	<!-- 수강 신청 -->
+	<insert id="registcourse" parameterType="cVo">
+		insert into
+		course(stu_id, year, term, subject_id)
+		values(#{stu_id}, #{year},
+		#{term}, #{subject_id})
+	</insert>
+
+	<!-- 수강신청한 시간이 중복되었는 지 여부 파악 -->
+	<select id="dulTimeChk" parameterType="cVo" resultType="int">
+		select
+		count(*)
+		from lec_time
+		where subject_id=#{subject_id}
+		and year=#{year}
+		and term=#{term}
+		and time_week||time_class in(select
+		b.time_week||b.time_class
+		from course a, lec_time b
+		where a.year=b.year
+		and a.term=b.term
+		and a.subject_id=b.subject_id
+		and a.year=#{year}
+		and
+		a.term=#{term}
+		and a.stu_id=#{stu_id})
+	</select>
+
+	<!-- 수강 취소 -->
+	<delete id="deletecourse" parameterType="cVo">
+		delete from course
+		where
+		stu_id=#{stu_id}
+		and year = #{year}
+		and term = #{term}
+		and subject_id =
+		#{subject_id}
+	</delete>
+
+<!-- 출석부 시작 -->
+	<!-- 수강하고있는 학생 조회(교수가 출석부파악용으로 사용) -->
+	<select id="stuList" parameterType="attendVo" resultType="attendVo">
+		select *
+		from course c, member m, student s, major z
+		where c.stu_id=m.mem_id
+		and m.mem_id=s.stu_id
+		and s.major_id=z.major_id
+		and c.subject_id=#{subject_id}
+		and c.year = #{year}
+		and c.term = #{term}
+	</select>
+	
+	
+	
+	<!-- 출석부 입력 -->
+	<insert id="attendInsert" parameterType="attendVo">
+		insert into attend_list
+		values(#{attend_date}, #{year}, #{term}, #{subject_id}, #{stu_id}, #{attend_type}, #{attend_remark})
+	</insert>
+	
+	<!-- 출석부 수정하기 위해 받는 리스트 -->
+	<select id="attendList" parameterType="attendVo" resultType="attendVo">
+		select *
+		from attend_list a, member m, student s, major z
+		where a.stu_id=m.mem_id
+		and m.mem_id=s.stu_id
+		and s.major_id=z.major_id
+		and year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}
+		and to_char(attend_date,'yyyy-mm-dd')=#{attend_date}
+	</select>
+	
+	<!-- 출석부 수정 -->
+	<update id="attendUpdate" parameterType="attendVo">
+		update attend_list
+		set attend_type = #{attend_type},
+		attend_remark = #{attend_remark}
+		where year=#{year}
+		and term=#{term}
+		and stu_id=#{stu_id}
+		and to_char(attend_date,'yyyy-mm-dd')=#{attend_date}
+	</update>
+	
+	<!-- 그 날짜에 출석부내용이 있는지확인 -->
+	<select id="attendDate" parameterType="attendVo" resultType="int">
+		select distinct 1
+		from attend_list
+		where to_char(attend_date,'yyyy-mm-dd')=#{attend_date}
+		and year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}
+	</select>
+	
+	<!-- 해당 날짜의 출석부 기록 삭제 -->
+	<delete id="deleteAttend" parameterType="attendVo">
+		delete from attend_list
+		where to_char(attend_date,'yyyy-mm-dd')=#{attend_date}
+		and year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}
+	</delete>
+	
+<!-- 성적 조회 + 입력 -->
+	<!-- year, term, 과목번호를 수강하는 학생들 리스트 -->
+	<select id="scoreList" parameterType="scoreVo" resultType="scoreVo">
+		select *
+		from course a
+		left outer join score b on a.stu_id=b.stu_id and a.year=b.year and a.term=b.term and a.subject_id=b.subject_id
+		left outer join student c on a.stu_id=c.stu_id
+		left outer join member d on a.stu_id=d.mem_id
+		left outer join major e on c.major_id=e.major_id
+		where a.year = #{year}
+		and a.term = #{term}
+		and a.subject_id = #{subject_id}
+	</select>
+	
+	<!-- 해당 학생의 결석/출석/지각 횟수 -->
+	<select id="absentStu" parameterType="scoreVo" resultType="int">
+		select count(*)
+		from attend_list
+		where year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}
+		and stu_id=#{stu_id}
+		and attend_type=#{attend_type}
+	</select>
+	
+	<!-- score insert -->
+	<insert id="insertScore" parameterType="scoreVo">
+		insert into score
+		values(#{stu_id},#{year},#{term},#{subject_id},#{all_score},#{mid_score},#{final_score},#{attend_score},#{assign_score})
+	</insert>
+	
+	<!-- score update -->
+	<update id="updateScore" parameterType="scoreVo">
+		update score
+		set all_score=#{all_score},
+		mid_score=#{mid_score},
+		final_score=#{final_score},
+		attend_score=#{attend_score},
+		assign_score=#{assign_score}
+		where stu_id=#{stu_id}
+		and year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}
+	</update>
+	
+	<select id="scoreChk" parameterType="scoreVo" resultType="int">
+		select distinct 1
+		from score
+		where year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}
+	</select>
+	
+	<sql id="dynamicMemName">
+		<if test="mem_name != null and mem_name != ''">
+			and d.mem_name like '%'||#{mem_name}||'%'
+		</if>
+	</sql>
+	<sql id="dynamicMemid">
+		<if test="mem_id != null and mem_id != ''">
+			and d.mem_id like '%'||#{mem_id}||'%'
+		</if>
+	</sql>
+	<sql id="dynamicSubjectid">
+		<if test="subject_id != null and subject_id != ''">
+			and b.subject_id = #{subject_id}
+		</if>
+	</sql>
+	
+	<select id="allCourseList" parameterType="lecVo" resultType="studentVo">
+		select * from(
+		select d.mem_id, d.mem_pass, d.mem_name, to_char(d.mem_bir,'yyyy-mm-dd') mem_bir, d.mem_gender, d.mem_add, d.mem_tel, d.mem_mail, e.stu_grade, to_char(e.graduate_date,'yyyy-mm-dd') graduate_date, c.major_name, rownum rs
+		from course a, lecture b, student e, member d, major c
+		where a.year=b.year
+		and a.term=b.term
+		and a.subject_id=b.subject_id
+		and a.stu_id=e.stu_id
+		and e.stu_id=d.mem_id
+		and e.major_id=c.major_id
+		and a.year=#{year}
+		and a.term=#{term}
+		and b.pro_id=#{pro_id}
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicMemName"/>
+		<include refid="dynamicMemid"/>
+		<include refid="dynamicSubjectid"/>
+		<![CDATA[) where rs between #{start} and #{end} 
+		  ]]>
+	</select>
+	
+	<select id="allCourseListCount" parameterType="lecVo" resultType="int">
+		select count(*)
+		from course a, lecture b, student e, member d, major c
+		where a.year=b.year
+		and a.term=b.term
+		and a.subject_id=b.subject_id
+		and a.stu_id=e.stu_id
+		and e.stu_id=d.mem_id
+		and e.major_id=c.major_id
+		and a.year=#{year}
+		and a.term=#{term}
+		and b.pro_id=#{pro_id}
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicMemName"/>
+		<include refid="dynamicMemid"/>
+		<include refid="dynamicSubjectid"/>
+	</select>
+	
+</mapper>

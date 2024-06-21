@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+//인서트 딜리트 업데이트 사용시 공통으로 사용되는 뷰페이지
+//각 컨트롤러에서 결과값을 리퀘스트에 저장시 "result"이름으로 저장되야함
+
+int res=(Integer)request.getAttribute("result");
+
+
+
+if(res>0){
+%>
+	{
+		"flag" : "성공"
+			
+	}
+
+<%	
+}else{
+%>	
+	{
+		"flag" : "실패"
+			
+	}
+	
+<%
+}
+%>

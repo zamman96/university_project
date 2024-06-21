@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+.list-item {
+	width: 100%;
+	padding: 40p;
+}
+.item-title {
+	font-size: var(--font-size-2xl);
+	font-weight: bold;
+    padding: 20px 20px;
+	border-bottom: 1px solid var(--gray-line-dark);
+    color: white;
+    background-color: var(--primary-p-80);
+}
+.item-content {
+	display: flex;
+    gap: 20px;
+    padding: 40px 20px;
+    flex-direction: column;
+    background-color: white;
+}
+.item {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.item:first-child {
+    align-items: end;
+    flex-direction: row;
+    gap: 10px;
+}
+.input-box {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.item label {
+	color: var(--gray-text-disabled);
+}
+.item input, .pwChk, .itemss input {
+	border-radius: 10px;
+	height: 40px;
+}
+
+button:hover {
+	background-color: var(--primary-p-5);
+}
+
+#pw2, #pw3 {
+	width: 242px;
+}
+
+/* item-bottom 시작 */
+.item-bottom {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+.save-btn {
+    border: none;
+    background-color: var(--primary-p-50);
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    padding: 13px 40px;
+}
+.save-btn:hover {
+	background-color: var(--primary-p-60);
+}
+.itemss{
+	display: flex;
+	align-items: end;
+    flex-direction: row;
+    gap: 10px;
+}

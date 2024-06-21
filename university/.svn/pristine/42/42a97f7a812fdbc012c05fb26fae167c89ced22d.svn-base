@@ -1,0 +1,113 @@
+package notice.controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+import file.service.FileServiceImpl;
+import file.service.IFileService;
+import file.vo.FileVO;
+import notice.service.INoticeService;
+import notice.service.NoticeServiceImpl;
+import notice.vo.NoticeVO;
+
+
+
+/**
+ * Servlet implementation class NoticeUpdate
+ */
+@WebServlet("/noticeUpdate.do")
+public class NoticeUpdate extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		int board_id =  Integer.parseInt(request.getParameter("board_id"));
+//		
+//		
+//		INoticeService ntService = NoticeServiceImpl.getInstance();
+//		
+//		NoticeVO nv = ntService.ntGet(board_id);
+//		
+//		int fileId = nv.getFile_id(); //확인 필요
+//
+//		if (fileId > 0) {
+//			IFileService fileService = FileServiceImpl.getInstance();
+//
+//			FileVO fileVO = new FileVO();
+//			fileVO.setFile_id(fileId);
+//			fileVO = fileService.getFile(fileVO);
+//
+//			request.setAttribute("fileVO", fileVO);
+//		}
+//		
+//		request.setAttribute("nv", nv);
+//		
+//		request.getRequestDispatcher("/board/notice/view/update.jsp").forward(request, response);
+//	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		
+		request.setCharacterEncoding("UTF-8");
+		//물어보기
+		String boardid=request.getParameter("board_id");
+		int board_id=Integer.parseInt(boardid);
+		String board_title = request.getParameter("board_title");
+		String board_content = request.getParameter("board_content");
+		String mem_id = request.getParameter("mem_id");
+		
+		//파일
+		String filename = request.getParameter("file_name").trim();
+		int board_file=Integer.parseInt(request.getParameter("board_file"));
+		
+		NoticeVO nv=new NoticeVO();
+		
+		nv.setWip(request.getRemoteAddr());
+		nv.setBoard_title(board_title);
+		nv.setBoard_content(board_content);
+		nv.setBoard_file(board_file);
+		nv.setBoard_id(board_id);
+
+		//파일
+
+		
+		int fileId = (int) (request.getParameter("fileId") == null ?
+				-1 : Long.parseLong(request.getParameter("fileId")));
+		
+		INoticeService ntService = NoticeServiceImpl.getInstance();
+		IFileService fileService = FileServiceImpl.getInstance();
+		
+		FileVO fileVO = fileService.insertFile(request.getParts());
+		
+	
+		
+		if(fileVO == null) { // 신규 첨붑파일 없는 경우
+			// 기존첨부파일 삭제 체크되었으면
+			
+			nv.setFile_id(fileId);
+		}else {
+			nv.setFile_id(fileVO.getFile_id());
+		}
+		
+		int cnt = ntService.ntUpdate(nv);
+		
+		System.out.println("cnt : " + cnt);
+		
+		String msg = "";
+		
+		if(cnt > 0) {
+			msg = "성공";
+		}else {
+			msg = "실패";
+		}
+		
+		request.getSession().setAttribute("msg", msg);
+		
+		response.sendRedirect(request.getContextPath() + "/noticeMain.do");
+	}
+
+}

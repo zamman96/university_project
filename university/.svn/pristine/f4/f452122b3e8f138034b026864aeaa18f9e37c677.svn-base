@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="board">
+	<insert id="insertBoard" parameterType="boardVo">
+		insert into board
+		values('1',(select nvl(max(board_id),0)+ 1 from board), #{mem_id} , #{board_title}, sysdate, #{board_content}, 0,#{board_file},#{wip})
+	</insert>
+	
+	<insert id="insertBoardFile">
+		insert into board_file
+		values( 1, (select max(board_id)
+		from board
+		where board_type='1'),(select max(file_id)
+		from attach_file) )
+	</insert>
+	
+	<insert id="insertReply" parameterType="replyVo">
+		insert into reply (reply_id, board_type, board_id, mem_id, reply_date, reply_content)
+		select 
+   	 		nvl(max(reply_id), 0) + 1,
+    		'1',
+    		#{board_id},
+    		#{mem_id},
+    		sysdate,
+    		#{reply_content}
+		from 
+    		reply
+		where 
+    		exists (
+        		select 1
+        		from board b
+        		where b.board_id = #{board_id}
+        		and b.board_type = '1'
+    		)
+	</insert>
+	
+	
+	<select id="getAllBoard" resultType="boardVo">
+		select board_type,board_id, mem_id, board_title,to_char(board_date,'yyyy-mm-dd') board_date, board_content, board_hit from board
+	</select>
+	
+	
+	<!-- 동적쿼리  -->
+	<sql id="dynamicCondition">
+	   <where>
+	      <if test="!(stype == '' or sword == '')">
+	           ${stype} like  '%'||#{sword}||'%'
+	       </if>
+	   </where>
+	</sql>
+	
+	<!-- 게시판 리슽 가져오기 3개씩   -->
+	<select id="selectByPage" parameterType="map" resultType="boardVo">
+	 select a.* from 
+	     (select rownum as rnum , b.* from
+	        ( select  board_type,board_id, 
+	        			mem_id, board_title,
+	        			to_char(board_date,'yyyy-mm-dd') board_date, 
+	        			board_content, 
+	        			board_hit  
+	        	from board
+	          <include refid="dynamicCondition"/> 
+	          	   where board_type='1'
+       			   order by  board_id desc ) b 
+	   <![CDATA[
+	          where rownum <= #{end}) A
+	       where A.rnum >= #{start}
+	       ]]>         
+	 </select>
+	
+	
+	
+	
+
+	<select id="detail" parameterType="int" resultType="boardVo">
+		
+		SELECT 
+		    b.board_type, 
+		    b.board_id, 
+		    m.mem_name,
+		    b.board_title,
+		    TO_CHAR(b.board_date, 'yyyy-mm-dd') AS board_date,
+		    b.board_content, 
+		    b.board_hit,
+		    b.board_file,
+		    c.file_id,
+		    c.file_origin_name,
+		    c.file_save_name,
+		    r.reply_content,
+		    TO_CHAR(r.reply_date, 'yyyy-mm-dd') AS reply_date
+		FROM 
+		    board b
+		    JOIN member m ON b.mem_id = m.mem_id
+		    LEFT OUTER JOIN board_file bf ON b.board_id = bf.board_id AND b.board_type = bf.board_type
+		    LEFT OUTER JOIN attach_file c ON bf.file_id = c.file_id
+		    LEFT OUTER JOIN reply r ON b.board_id = r.board_id
+		WHERE 
+		    b.board_id = #{board_id}
+		    AND b.board_type = '1'
+		
+		
+	</select>
+	
+	<select id="searchBoard" resultType="boardVo" parameterType="map">
+		select * from board where ${FIELD} like '%'||#{VALUE}||'%'
+	</select>
+	
+	<update id="updateBoard" parameterType="boardVo">
+		update board set 
+		board_title=#{board_title}, 
+		board_content=#{board_content},
+		board_date= sysdate,
+		board_file=#{board_file},
+		WIP=#{wip}
+		
+		where board_id = #{board_id} and board_type= '1'
+	</update>
+	
+	 <update id="updateHit" parameterType="int" >
+	 update board set 
+	 board_hit=board_hit+1  where board_id = #{board_id} and board_type= '1'
+	 </update>
+	
+	
+	<delete id="qaDeleteBoard" parameterType="int">
+		delete from board where board_id=#{board_id} and board_type= '1'
+	</delete>
+	
+	 <select id="getTotalCount" parameterType="map" resultType="int">
+	      select count(*) from board where BOARD_TYPE='1'
+	       <include refid="dynamicCondition"/> 
+	    
+	 </select>
+		
+	<update id="cbtUpdate" parameterType="map">
+		update board 
+		set board_cnt = (select board_cnt from board where board_no =#{board_no})+1
+		where board_no=#{board_no}
+	</update>
+	
+	
+	<!-- 230615 정기쁨 추가 시작 -->
+	
+	<!-- 메인의 공지게시판에 출력 -->
+	<select id="selectNotiBoard" resultType="boardVo">
+		select board_title,
+			   board_date
+		  from board 
+		 where board_type = '0'   
+	  order by board_date desc  	   
+	</select>
+	
+	<!-- 메인의 문게시판에 출력 -->
+	<select id="selectQuestBoard" resultType="boardVo">
+		select board_title,
+			   board_date
+		  from board 
+		 where board_type = '1'   
+	  order by board_date desc  	   
+	</select>
+	<!-- 230615 정기쁨 추가 끝 -->
+	
+	<select id="FileDownload" parameterType="map" resultType="boardVo">
+	select a.board_type, a.board_id, a.mem_id,a.board_title,to_char(a.board_date,'yyyy-mm-dd') board_date, a.board_content, a.board_hit,a.board_file,
+				c.file_id,c.file_origin_name,c.file_save_name
+		from board a
+		left outer join board_file b on a.board_id=b.board_id and a.board_type=b.board_type
+		left outer join attach_file c on  b.file_id=c.file_id
+		where c.file_save_name=#{file_save_name}
+		and a.board_id=#{board_id}
+		and a.board_type=1
+	</select>
+	
+</mapper>

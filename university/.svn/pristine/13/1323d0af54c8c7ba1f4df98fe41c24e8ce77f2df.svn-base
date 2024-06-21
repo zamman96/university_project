@@ -1,0 +1,191 @@
+@charset "UTF-8";
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+	display: flex;
+	justify-content: space-between;
+    align-items: center;
+}
+.section-top-left {
+	font-size: var(--font-size-4xl);
+	font-weight: bold;
+}
+.section-top-right {
+	display: flex;
+	gap: 10px;
+}
+.section-top-right .btn, .reply-admin .btn {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-content: center;
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	font-size: var(--font-size-sm);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+}
+.section-top-right .btn:hover {
+    background-color: var(--primary-p-5);
+}
+.section-top-right .btn img, .reply-admin .btn img {
+	width: 20px;
+	height: 20px;
+}
+.reply-admin{
+	display: flex;
+	direction: col;
+}
+.reply-admin .btn{
+	font-size: 0.8rem;
+	margin-left: 10px;
+}
+
+/* section-center 시작 */
+.section-center {
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 30px 30px;
+	border-radius: var(--br-xl);
+	min-width: 900px;
+    min-height: 830px;
+}
+.table-top {
+	font-size: var(--font-size-2xl);
+	font-weight: bold;
+	padding-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+/* table 시작 */
+.table-container {
+	border-top: 1px solid var(--gray-line-dark);
+	border-bottom: 1px solid var(--gray-line-dark);
+    width: -webkit-fill-available;
+}
+table {
+	width: inherit;
+}
+table tr {
+	border-bottom: 1px solid var(--gray-line-box);
+}
+table th, td {
+    padding: 20px 20px;
+}
+table th {
+	background-color: var(--primary-p-5);
+	width: 150px;
+	text-align: left;
+}
+.text-input {
+	width: -webkit-fill-available;
+	border: 1px solid var(--gray-bg-5);
+	border-radius: var(--br-sel);
+	padding: var(--pd-select-y) var(--pd-select-x);
+	font-size: 16px;
+}
+table textarea {
+	width: -webkit-fill-available;
+    padding: 20px;
+	font-size: 16px;
+	border: 1px solid var(--gray-bg-5);
+}
+table input[type="file"] {
+    display: none;
+}
+.file-btn {
+    color: var(--gray-text-body);
+    border: 1px solid var(--gray-text-body);
+    padding: 8px 8px 8px 31px;
+    vertical-align: middle;
+    background-color: white;
+    font-size: 16px;
+    background-image: url(http://localhost/svnTest/board/board-1/img/file.png);
+    background-repeat: no-repeat;
+    background-position: 9px 7px;
+}
+.file-btn:hover {
+	background-color: var(--primary-p-5);
+}
+#filename {
+	margin-left: 10px;
+}
+#filereset {
+	display: none;
+    color: var(--gray-text-body);
+    cursor: pointer;
+    margin-left: 4px;
+}
+#filereset:hover {
+	color: var(--gray-text-disabled);
+}
+
+/* table-bottom 시작 */
+.table-bottom {
+	padding: 40px 0 40px 0;
+    width: 100%;
+    text-align: center;
+}
+.move-btn {
+    border: none;
+    background-color: var(--primary-p-60);
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    padding: 15px 60px;
+}
+.move-btn:hover {
+	background-color: var(--primary-p-50);
+}
+
+
+
+
+/* 답변 */
+.rcont{
+	display: flex;
+}
+.reply-button{
+	display:flex;
+	flex-direction: column;
+/* 	padding: 5px; */
+}
+.reply-button input{
+	margin: 5px;
+	margin-left: 20px;
+	background-color: var(--primary-p-60);
+	color: white;
+	font-weight: bold;
+}
+.reply-button input:hover{
+	background-color: var(--primary-p-50);
+}
+.reply-content {
+    width: 90%;
+}
+.reply-content-text{
+	height: 100%;
+}
+
+
+
+
+
+
+
+	
+
+
+	
+	

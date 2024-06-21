@@ -1,0 +1,135 @@
+@charset "UTF-8";
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+	font-size: var(--font-size-4xl);
+	font-weight: bold;	
+}
+
+/* section-center 시작 */
+.section-center {
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 30px 30px;
+	border-radius: var(--br-xl);
+	min-width: 900px;
+	min-height: 830px;
+}
+
+/* list-items 시작 */
+.list-items {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+.item-title {
+	font-size: var(--font-size-2xl);
+	font-weight: bold;
+	padding-bottom: 20px;
+}
+.item-content {
+	padding: 20px;
+	background-color: var(--bg-1);
+	border-radius: 10px;
+}	
+.item-btn {
+	padding: 8px 15px;
+	color: white;
+	border: none;
+	background-color: var(--primary-p-70);
+}
+.item-btn:hover {
+	background-color: var(--primary-p-60);
+}
+
+/* item-table 시작 */
+.item-lists {
+	display: flex;
+    justify-content: space-between;
+}
+.item-list {
+	width: 100%;
+	text-align: center;
+}
+.list-row {
+	color: var(--primary-p-70);
+}
+.list-colums {
+	background-color: white;
+	margin-top: 10px;	
+	padding: 10px;
+    max-width: 500px;
+}
+.list-colum {
+	padding: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.item-lists .item-list:first-child .list-colums {
+	border-radius: 10px 0 0 10px;
+}	
+.item-lists > .item-list:last-child .list-colums {
+	border-radius: 0 10px 10px 0;
+}	
+.list-null {
+	background-color: white;
+    padding: 14px;
+    border-radius: 10px;
+    margin-top: 10px;
+    text-align: center;
+    color: var(--gray-text-disabled);
+    font-weight: 300;
+}
+
+/* 테이블 시작 */
+.table-wrap {
+	width: 100%; 
+}
+.table-wrap table {
+	white-space: nowrap;
+	width: 100%;
+}
+.table-wrap th, td {
+	height: 50px;
+	padding: 0 var(--pd-table);
+	text-align: center;
+}
+.table-wrap th {
+	background: var(--primary-p-5);
+	text-align: center;
+}
+.table-wrap td {
+	border-top: 1px solid var(--table-td);
+	border-bottom: 1px solid var(--table-td);
+}
+thead tr {
+	position: sticky;
+	top: -1px;
+	background-color: #f9f9f9;
+	z-index: 1; /* Make sure the header stays on top */
+}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,63 @@
+package noticeBoard.service;
+
+import java.util.List;
+import java.util.Map;
+
+
+
+import noticeBoard.vo.NoticeBoardVO;
+import noticeBoard.vo.NoticePageVO;
+
+public interface INoticeBoardService {
+	
+
+	public List<NoticeBoardVO> selectNotice(Map<String, Object> map);
+
+	//�Խñ۰���
+	public int boardCnt(NoticeBoardVO noticeBoardVO);
+	
+
+	public NoticePageVO pageInfo(int page, String stype, String sword);
+
+
+	
+	public List<NoticeBoardVO> selectqaBoard();
+	
+	public List<NoticeBoardVO> NoticeBoard();
+	
+
+	
+	public NoticeBoardVO detailBoard (int num);
+	
+//	public int updateHit(int num);
+
+//	public NoticeBoardVO selectNotice(Object board_title, Object board_date, Object board_content, Object board_hit);
+
+
+//	public int delete(String memName);
+
+//	public NoticeBoardVO ntGet(String board_no);
+
+//	public int ntHit(String board_no);
+	
+	
+	
+
+	public int  insertBoard(NoticeBoardVO vo);
+	
+	public int updateBoard(NoticeBoardVO vo);
+
+	public int deleteBoard(int num);
+	
+	public int getTotalCount(Map<String, Object> map);
+
+	public int updateHit(int num);
+
+
+	
+
+
+}
+
+
+

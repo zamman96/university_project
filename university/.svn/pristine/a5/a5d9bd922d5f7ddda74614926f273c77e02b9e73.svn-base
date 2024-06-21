@@ -1,0 +1,119 @@
+package member.service;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import member.dao.IMemberDao;
+import member.dao.MemberDaoImpl;
+import member.vo.MemberVO;
+
+public class MemberServiceImpl implements IMemberService{
+	private static MemberServiceImpl service;
+	private IMemberDao dao;
+	
+	private MemberServiceImpl() {
+		dao = MemberDaoImpl.getInstance();
+	}
+	
+	public static MemberServiceImpl getInstance() {
+		if(service==null) service = new MemberServiceImpl();
+		return service;
+	}
+	
+	@Override
+	public MemberVO login(MemberVO memVo) {
+		return dao.login(memVo);
+	}
+
+	@Override
+	public List<MemberVO> studentIdCreate(List<MemberVO> list, String year) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<MemberVO> save = new ArrayList<MemberVO>();
+		map.put("year", year);
+		int major_id = list.get(0).getMajor_id();
+		map.put("major_id", major_id);
+		
+		String stu_id = dao.stuIdCreate(map);
+		String id_s = stu_id.substring(0,7);
+		int num = Integer.parseInt(stu_id.substring(7));
+		
+		for(MemberVO memvo : list) {
+			String bir = memvo.getMem_bir();
+			
+			// 연도 뒤 두 자리 + 월 + 일
+	        String pw = bir.substring(2, 4) + bir.substring(5, 7) + bir.substring(8, 10);
+	        
+	        String numStr = ""+num++;
+	        while(numStr.length()<3) {
+	        	numStr= "0"+numStr;
+	        }
+	        memvo.setMem_id(id_s+numStr);
+	        memvo.setMem_pass(pw);
+			save.add(memvo);
+		}
+		
+		return save;
+	}
+
+	@Override
+	public int insertMember(MemberVO memVo) {
+		// TODO Auto-generated method stub
+		return dao.insertMember(memVo);
+	}
+
+	@Override
+	public int insertStudent(MemberVO memVo) {
+		// TODO Auto-generated method stub
+		return dao.insertStudent(memVo);
+	}
+
+	@Override
+	public String stuIdCreate(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.stuIdCreate(map);
+	}
+
+	@Override
+	public String proIdCreate(MemberVO memVo) {
+		// TODO Auto-generated method stub
+		return dao.proIdCreate(memVo);
+	}
+
+	@Override
+	public String admIdCreate(String mem_mail) {
+		// TODO Auto-generated method stub
+		return dao.admIdCreate(mem_mail);
+	}
+
+	@Override
+	public int insertProfessor(MemberVO memVo) {
+		// TODO Auto-generated method stub
+		return dao.insertProfessor(memVo);
+	}
+
+	@Override
+	public int insertAdmin(MemberVO memVo) {
+		// TODO Auto-generated method stub
+		return dao.insertAdmin(memVo);
+	}
+
+	@Override
+	public int memInfoChange(MemberVO memVo) {
+		return dao.memInfoChange(memVo);
+	}
+
+	@Override
+	public String pwChk(MemberVO memVo) {
+		return dao.pwChk(memVo);
+	}
+
+	@Override
+	public int memPwChange(MemberVO memVo) {
+		return dao.memPwChange(memVo);
+	}
+
+
+}

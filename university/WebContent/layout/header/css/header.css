@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+/* header 시작 */
+header {
+	display: flex;
+	justify-content: space-between;
+	align-self: stretch;
+	flex-direction: row;
+	align-items: center;
+	height: 60px;
+	line-height: 60px;
+	box-sizing: border-box;
+	padding: 0 var(--padding-2xl);
+	background-color: var(--white);
+	border-radius: 0 0 var(--br-xl) var(--br-xl);
+	user-select: none;
+}
+.header-icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 4px;
+}
+.header-right {
+	display: flex;
+	flex-direction: row;
+	gap: var(--gap-layout-1);
+	align-self: stretch;
+}
+.header-item:hover {
+	color: var(--primary-p-50);
+	filter: var(--filter-p-50);
+}
+/* header 끝 */

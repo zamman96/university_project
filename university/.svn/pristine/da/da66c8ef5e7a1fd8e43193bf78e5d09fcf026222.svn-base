@@ -1,0 +1,291 @@
+/**
+ * 
+ */
+
+
+
+
+
+const writeBoard =()=>{
+	
+	$.ajax({
+		url : `${mypath}/BoardFileupload.do`,
+		data : formData,
+		type : 'post',
+		processData: false, // 파일 데이터를 전송할 때 필요
+        contentType: false, // 파일 데이터를 전송할 때 필요
+		success : function(res){
+			// 글쓰기 성공 시 게시판 출력 함수를 콜백으로 실행
+			console.log("확인>>>>", res);
+			location.href='http://localhost/university/board/qa/board.jsp';
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status);
+		}
+	})
+	
+	
+}
+
+const deleteBoard=()=>{
+	
+	$.ajax({
+		url : `${mypath}/DeleteBoard.do`,
+		data : {board_id:bnum},
+		contentType : 'application/json; charset=utf-8',
+		type : 'get',
+		success : function(res){
+			// 글쓰기 성공 시 게시판 출력 함수를 콜백으로 실행
+			console.log("확인>>>>", res);
+			location.href='http://localhost/university/board/qa/board.jsp';
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status);
+		},
+		dataType : 'json'
+	})
+	
+	
+}
+
+
+const updateBoard = () => {
+	
+	$.ajax({
+		url : `${mypath}/BoardUpdate.do`,
+		data : JSON.stringify(board),
+		type : 'post',
+		contentType : "application/json;charset=utf-8",
+		success : function(res){
+			console.log(res);
+			detailBoard(bnum);
+			
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status);
+		},
+		dataType: 'json'
+	})
+	
+	
+	
+}
+
+const InsertReply = () => {
+	
+		$.ajax({
+		url : `${mypath}/InsertReply.do`,
+		data : {board_id:bnum,
+		mem_id:uvo.mem_id,
+		reply_content:reply_content
+		},
+		type : 'get',
+		success : function(res){
+//			alert(res.flag);
+
+			detailBoard();
+			
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status);
+		},
+		dataType : 'json'
+	})
+}
+
+
+const updateHit = () => {
+	
+		$.ajax({
+		url : `${mypath}/UpdateHit.do`,
+		data : {board_id:bnum},
+		type : 'get',
+		success : function(res){
+//			alert(res.flag);
+
+			detailBoard();
+			
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status);
+		},
+		dataType : 'json'
+	})
+	
+	
+	
+}
+
+
+
+const detailBoard=()=>{
+	
+	$.ajax({
+		url : `${mypath}/DetailBoard.do`,
+		data : {board_id:bnum},
+		contentType : 'application/json; charset=utf-8',
+		type : 'get',
+		success : function(res){
+			//글 상세보기
+//			console.log('test1');
+//			console.log(res.mid);
+//			console.log(res.bdata);
+//			console.log(res.bhit);
+			console.log(res.bfile);
+			console.log(bnum);
+			console.log(uvo.mem_grantno);
+			fileOname=res.file_origin_name;
+			fileSname=res.file_save_name;
+			
+			
+			let code =`
+							<!-- container-left 시작 -->
+							<div id="container-left">
+								
+								<!-- side-menu 시작 -->
+								<jsp:include page="/layout/side-menu/side-menu.jsp"/>
+								<!-- side-menu 끝 -->
+							
+							</div>
+							<!-- container-left 끝 -->
+							
+							<!-- container-right 시작 -->
+							<div id="container-right">
+								
+								<!-- header 시작 -->
+								<jsp:include page="/layout/header/header.jsp"/>
+								<!-- header 끝 -->
+								
+								<!-- section 시작 -->
+								<section>
+									
+									<!-- section-content 시작 -->
+									<div class="section-content">
+										
+										<!-- section-top 시작 -->
+										<div class="section-top">
+											<div class="section-top-left">
+												공지사항
+											</div>`
+											if(res.mid==uvo.mem_id){
+											code +=`<div class="section-top-right">
+											
+												<button class="btn" id="upbtn" type="button">
+													<img alt="버튼이미지">글 수정
+												</button>
+												<button class="btn" id="delbtn" type="button">
+													<img alt="버튼이미지">글 삭제
+												</button>
+											</div>`
+											}else if(uvo.mem_grantno==3){
+												code+=`
+												<div class="section-top-right">
+														<button class="btn" id="rebtn" type="button">
+															<img alt="버튼이미지">댓글달기
+														</button>
+												</div>`
+											}
+											
+											
+											
+									code +=`</div>
+										<!-- section-top 끝 -->
+										
+										<!-- section-center 시작 -->
+										<div class="section-center">
+												<p style="text-align: right;">글쓴이 :${res.mem_name} 작성일 :${res.bdata} 조회수 :${res.bhit}</p>
+												<table id="table">
+											
+											<!-- table-top 시작 -->
+											<div class="table-top">
+										  		문의글 			
+											</div>
+						                  	<!-- table-top 끝 -->
+											
+											<!-- table-container 시작 -->
+											<div class="table-container">
+													
+													<tr>
+														<th>제목</th>
+														<td id="dtitle">${res.btitle}</td>
+													</tr>
+													<tr>
+														<th>내용</th>
+														<td id="dcont">${res.bcon}</td>
+													</tr>
+												
+													<tr>
+															<th>첨부파일</th>
+															<td>`
+															
+															
+													if(res.bfile==1){
+													code+=`<a id="dfile" href="${mypath}/FileDownload.do?file_name=${res.file_save_name}&bnum=${bnum}">
+															<span id="FOname">${res.file_origin_name}</span>다운로드</a>`
+														}else{
+															code+=`첨부된파일이없습니다`
+														}	
+														
+														
+													code+=`</td>
+													</tr>
+											</table>`
+											
+											
+											
+											if(res.reply_content!=null){
+												
+												
+														code+=`<br><br>
+														<table id="table">
+														<p style="text-align: right;">작성일 :${res.reply_date}</p>
+														<!-- table-top 시작 -->
+														<div class="table-top">
+													  		답변			
+														</div>
+									                  	<!-- table-top 끝 -->
+														
+														<!-- table-container 시작 -->
+														<div class="table-container">
+																<tr>
+																	<th>답변</th>
+																	<td id="recon">${res.reply_content}</td>
+																</tr>
+														</table>`
+													
+													
+											}
+											
+												
+											code+=`</div>
+											<!-- table-container 끝 -->
+											
+											<div class="table-bottom">	
+												
+												<button type="button" class="move-btn" onclick="location.href='http://localhost/university/board/qa/board.jsp'">완료</button>
+											</div>
+										</div>
+										<!-- section-center 끝 -->
+										
+									</div>
+									<!-- section-content 끝 -->
+									 
+								</section>
+								<!-- section 끝 -->
+								
+							</div>
+							<!-- container-right 끝 -->`
+			
+			$('#container').html(code);
+			
+			
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status);
+		},
+		dataType : 'json'
+	})
+	
+	
+	
+}

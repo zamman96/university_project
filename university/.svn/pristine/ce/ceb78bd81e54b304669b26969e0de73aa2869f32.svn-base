@@ -1,0 +1,87 @@
+package notice.controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+
+import file.service.FileServiceImpl;
+import file.service.IFileService;
+import file.vo.FileVO;
+import notice.service.INoticeService;
+import notice.service.NoticeServiceImpl;
+import notice.vo.NoticeVO;
+import util.StreamData;
+
+
+
+/**
+ * Servlet implementation class NoticeInsert
+ */
+@WebServlet("/noticeInsert.do")
+public class NoticeInsert extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+//       
+//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		request.getRequestDispatcher("/board/notice/view/insert.jsp").forward(request, response);
+//	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		
+//		String mem_id = request.getParameter("mem_id");
+//		String board_title = request.getParameter("board_title");
+//		String board_content = request.getParameter("board_content");
+		
+		String reqdata =StreamData.getReqData(request);
+		
+		Gson gson=new Gson();
+		
+		NoticeVO nv =gson.fromJson(reqdata, NoticeVO.class);
+		
+		
+		
+		INoticeService ntService = NoticeServiceImpl.getInstance();
+		
+		int result=ntService.ntInsert(nv);
+		
+		
+		
+		//파일
+		IFileService fileService = FileServiceImpl.getInstance();
+		
+		FileVO fileVO = fileService.insertFile(request.getParts());
+		
+	
+		
+		if(fileVO != null) {
+			nv.setFile_id(fileVO.getFile_id());
+		}
+		
+		
+		//result
+		System.out.println("result : " + result);
+		
+		String msg = "";
+		
+		if(result > 0) {
+			msg = "성공";
+		}else {
+			msg = "실패";
+		}
+		
+		
+//		request.setAttribute("result", result);
+		
+		//물어보기
+		request.getSession().setAttribute("msg", msg);
+		
+//		response.sendRedirect(request.getContextPath() + "/noticeMain.do");
+	}
+
+}

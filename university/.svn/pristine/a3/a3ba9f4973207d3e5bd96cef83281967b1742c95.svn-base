@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+
+	<!-- 관리자 학적 변동 알람 -->
+	<select id="alarmSelect" resultType="stuChangeVo">
+		select * from stu_change
+	</select>
+	
+	<!-- 회원 비밀번호 변경 -->
+	<update id="memPwChange" parameterType="memVo">
+		update MEMBER
+		set	
+			MEM_PASS = #{mem_pass}
+		where MEM_ID = #{mem_id}
+	</update>
+	
+	<!-- 회원 비밀번호 조회 -->
+	<select id="pwChk" parameterType="memVo" resultType="String">
+		select mem_pass
+		from member
+		where mem_id = #{mem_id}
+		  and mem_pass = #{mem_pass}
+	</select>
+	
+	<!-- 회원정보 변경 -->
+	<update id="memInfoChange" parameterType="memVo">
+		update MEMBER
+		set	
+			MEM_ADD = #{mem_add},
+			MEM_TEL = #{mem_tel},
+			MEM_MAIL = #{mem_mail}
+		where MEM_ID = #{mem_id}
+	</update>
+
+	<select id="loginStu" parameterType="memVo" resultType="memVo">
+		select *
+		from member a, student b, major c, colleage e
+		where a.mem_id=#{mem_id}
+		and a.mem_pass=#{mem_pass}
+		and a.mem_id=b.stu_id
+		and
+		b.major_id=c.major_id
+		and c.col_id=e.col_id
+	</select>
+
+
+	<!-- 학 생 -->
+	<!-- 학번 생성 -->
+	<select id="stu_id" parameterType="map" resultType="String">
+       select case b.md
+           when 0 then substr(#{year},3,2)||a.col||a.ma||'001'
+           else to_char(b.md)
+       end as result
+    from (
+        select lpad(nvl(col_id,0),2,'0') as col, lpad(major_id,3,'0') as ma
+        from major
+        where major_id=#{major_id}
+    ) a,
+    (
+        select nvl(max(mem_id)+1,0) as md
+        from member
+        where substr(mem_id,1,2)=substr(#{year},3,2)
+        and to_number(substr(mem_id,5,3))=#{major_id}
+    ) b
+	</select>
+	
+	<!-- 회원 추가 -->
+	<insert id="signUp" parameterType="memVo">
+		insert into member(mem_id, mem_pass, mem_name, mem_bir, mem_gender, mem_add, mem_tel, mem_mail, mem_grantno)
+		values(#{mem_id}, #{mem_pass}, #{mem_name}, #{mem_bir}, #{mem_gender}, #{mem_add}, #{mem_tel}, #{mem_mail}, #{mem_grantno})
+	</insert>
+	
+	<!-- 학생 추가 -->
+	<insert id="stuSignUp" parameterType="memVo">
+		insert into student(stu_id, major_id, enter_date, stu_grade)
+		values(#{mem_id}, #{major_id}, #{enter_date}, 1)
+	</insert>
+	
+	<!-- 교수 사번 생성 -->
+	<select id="pro_id" parameterType="memVo" resultType="String">
+		select 'p'||lpad(#{major_id}, 3, '0')||'_'||nvl(to_number(max(to_number(substr(mem_id, 6))) + 1),1) as new_id
+		from member
+		where substr(mem_id, 1, 1) = 'p'
+		and to_number(substr(mem_id, 2, 3)) = #{major_id}
+	</select>
+	
+	<!-- 관리자 사번 생성 -->
+	<select id="adm_id" resultType="String" parameterType="String">
+		select 'a'||lpad(to_number(max(to_number(substr(mem_id,2,3)))+1),3,0)||substr(#{mem_mail},1,1)
+		from member
+		where substr(mem_id, 1, 1) = 'a'
+	
+	</select>
+	
+	<!-- 교수 추가 -->
+	<insert id="proSignUp" parameterType="memVo">
+		insert into professor(pro_id, major_id)
+		values(#{mem_id},#{major_id})
+	</insert>
+	
+	<!-- 관리자 추가 -->
+	<insert id="admSignUp" parameterType="memVo">
+		insert into admin(adm_id, admin_position)
+		values(#{mem_id}, #{admin_position})
+	</insert>
+	
+	<!-- 해당년도 학생 전체 리스트 조회 -->
+	<select id="getAllStudent" resultType="memVo">
+	select ta.mem_name,tc.major_name,ta.mem_add,ta.mem_tel
+ 	  from member ta, major tc,(select a.*
+                   				  from student a
+                 			     inner join tuition b
+                     			    on a.stu_id = b.stu_id
+                  				 where b.year = EXTRACT(YEAR FROM SYSDATE)) tb
+	 where ta.mem_id = tb.stu_id
+	   and tb.major_id = tc.major_id
+	</select>
+	
+ 
+	<!-- 등록금 납부학생 조회 -->
+	<select id="selectTuiList" resultType="memVo">
+		select ta.mem_name,tc.major_name,ta.mem_add,ta.mem_tel
+ 		  from member ta, major tc,(select a.*
+				                      from student a
+				                     inner join tuition b
+				                        on a.stu_id = b.stu_id
+				                     where b.year = EXTRACT(YEAR FROM SYSDATE)
+				                       and b.PAYMENT_BANK is not null) tb
+		 where ta.mem_id = tb.stu_id
+		   and tb.major_id = tc.major_id
+	</select>
+	
+	<!-- 등록금 미납학생 조회 -->
+	<select id="selectTuiList2" resultType="memVo">
+		select ta.mem_name,tc.major_name,ta.mem_add,ta.mem_tel
+  		  from member ta, major tc,(select a.*
+				                      from student a
+				                     inner join tuition b
+				                        on a.stu_id = b.stu_id
+				                     where b.year = EXTRACT(YEAR FROM SYSDATE)
+				                       and b.PAYMENT_BANK is null) tb
+		 where ta.mem_id = tb.stu_id
+		   and tb.major_id = tc.major_id
+	</select>
+	
+	<!-- 학생 학적변경 -->
+	<update id="updateStuChange" parameterType="stuChangeVo">
+		update stu_change
+  		   set year = EXTRACT(YEAR FROM SYSDATE),
+     				  reg_date = to_char(sysdate),
+      				  reg_type = #{reg_type},
+      				  reg_content = #{reg_content}
+ 		 where stu_id = #{stu_id}
+	</update>
+
+	<!-- 학적변동 승인(년도 입력 수정) --> 
+	<insert id="insertStuChange" parameterType="stuChangeVo">
+		insert into
+		stu_change(year,term,stu_id,reg_date,reg_type,reg_content,apply_type)
+		values
+		(extract(year from sysdate),#{term},#{stu_id},to_char(sysdate),#{reg_type},#{reg_content},0)
+	</insert>
+	
+	<!-- 교수 전체리스트 조회 -->
+	<select id="professorAllList" resultType="proVo">
+		select a.col_name,b.major_name,d.mem_name,d.mem_bir<!-- to_char(d.mem_bir, 'YYYY-MM-DD') -->
+        		,d.mem_gender,d.mem_add,d.mem_tel,d.mem_mail
+        		,d.mem_grantno
+		  from colleage a, major b, professor c, member d 
+ 		 where c.pro_id = d.mem_id
+   		   and c.major_id = b.major_id
+   		   and a.col_id = b.col_id
+   		   and pro_type=1
+	</select>
+
+<!-- 	교수 전체리스트 조회 
+	<select id="professorAllList" resultType="proVo">
+		select a.col_name, b.major_name,d.mem_name
+		  from colleage a, major b, professor c, member d 
+ 		 where c.pro_id = d.mem_id
+   		   and c.major_id = b.major_id
+   		   and a.col_id = b.col_id
+   		   and pro_type=1
+	</select>
+	 -->
+	<!-- 교수별 상세정보 조회 -->
+	<select id="detailProfesseor" parameterType="String" resultType="memVo">
+		select c.pro_id,d.mem_pass,d.mem_name,to_char(d.mem_bir, 'YYYY-MM-DD')
+        		,d.mem_gender,d.mem_add,d.mem_tel,d.mem_mail
+        		,d.mem_grantno
+  		  from colleage a,major b,professor c,member d
+ 		 where a.col_id = b.col_id
+   		   and b.major_id = c.major_id
+		   and c.pro_id = d.mem_id
+		   and mem_name = #{mem_name}
+	</select>
+	
+	<!-- 해당교수 재직상태 변경 -->
+	<update id="updatePro_type" parameterType="proVo">
+		update professor
+    	   set pro_type = #{pro_type}
+ 		 where pro_id = #{pro_id}
+	</update>
+	
+	
+	<!-- 학생 학적조회 -->
+	<select id="selectStuChange" parameterType="string" resultType="stuChangeVo">
+		select * from stu_change where stu_id = #{stu_id}
+	</select>
+	
+	<!-- 학적변경 신청학생 조회 -->
+	<select id="searchStuChangeList" resultType="stuChangeVo">
+		select a.mem_name, c.*
+   		  from member a, student b, stu_change c
+  		 where a.mem_id = b.stu_id
+    	   and b.stu_id = c.stu_id 
+    	   and c.apply_type = 0
+	</select>
+	
+	<!-- 휴학신청 학생 조회 -->
+	<select id="reg_typeChangeList" resultType="stuChangeVo">
+		select a.mem_name, c.*
+ 		  from member a, student b, stu_change c
+ 		 where a.mem_id = b.stu_id
+   		   and b.stu_id = c.stu_id 
+   		   and c.reg_type = '휴학'
+	</select>
+
+	<!-- 복학신청 학생 조회 -->
+	<select id="reg_typeChangeList2" resultType="stuChangeVo">
+		select a.mem_name, c.*
+ 		  from member a, student b, stu_change c
+ 		 where a.mem_id = b.stu_id
+   		   and b.stu_id = c.stu_id 
+   		   and c.reg_type = '복학'
+	</select>
+	
+	<!-- 휴학신청 승인 -->
+	<update id="reg_typeUpdate" parameterType="String">
+		update stu_change
+   		   set apply_type = 1,
+       		   process_date = sysdate
+ 		 where reg_type = '휴학'
+    	   and stu_id = #{stu_id}
+	</update>
+	
+	<!-- 복학신청 승인 -->
+	
+	
+	<select id="loginPro" parameterType="memVo" resultType="memVo">
+		select *
+		from member a, major c, professor d, colleage e
+		where
+		a.mem_id=#{mem_id}
+		and a.mem_pass=#{mem_pass}
+		and a.mem_id=d.pro_id
+		and
+		d.major_id=c.major_id
+		and c.col_id=e.col_id
+	</select>
+	
+	<select id="loginAdm" parameterType="memVo" resultType="memVo">
+		select *
+		from member a, admin f
+		where a.mem_id=#{mem_id}
+		and
+		a.mem_pass=#{mem_pass}
+		and a.mem_id=f.adm_id
+	</select>
+	
+	<select id="findPw" parameterType="map" resultType="String">
+	select mem_pass
+	from member
+	where mem_id = #{uId}
+	and mem_bir =#{bir}
+	</select>
+	
+	<select id="findMail" parameterType="map" resultType="String">
+	select mem_mail
+	from member
+	where mem_id = #{uId}
+	and mem_bir =#{bir}
+	</select>
+	
+<!-- 	<select id="findMail" parameterType="String" resultType="memVo"> -->
+<!-- 	select mem_mail -->
+<!-- 	from member -->
+<!-- 	where mem_id = #{mem_id} -->
+<!-- 	</select> -->
+	
+	
+		<select id="getMember" parameterType="String" resultType="memVo">
+		SELECT * FROM MEMBER
+		WHERE MEM_ID = #{mem_id}
+				
+	</select>
+	
+		<update id="updatePassword" parameterType="map">
+		
+		update member
+		set mem_pass = #{tempPassword}
+		where mem_id = #{uId}
+	</update>
+	
+</mapper>

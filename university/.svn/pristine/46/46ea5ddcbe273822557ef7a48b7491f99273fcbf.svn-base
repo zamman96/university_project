@@ -1,0 +1,95 @@
+package notice.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+
+import notice.service.INoticeService;
+import notice.service.NoticeServiceImpl;
+import notice.vo.NoticeVO;
+import notice.vo.PaginationVO;
+import notice.vo.SearchVO;
+
+
+/**
+ * Servlet implementation class NoticeMain
+ */
+@WebServlet("/noticeMain.do")
+public class NoticeMain extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+//	INoticeService ntService = NoticeServiceImpl.getInstance();
+
+ 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		
+		
+		
+		INoticeService ntService = NoticeServiceImpl.getInstance();
+		
+		
+		 StringBuffer buf=new StringBuffer();
+		 String line=null;
+		 
+		 try {
+				BufferedReader reader=request.getReader();
+				while (true) {
+					line=reader.readLine();
+					if(line==null)break;
+					buf.append(line);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			 
+			String reqdata=buf.toString();
+				
+			Gson gson =new Gson();
+			
+			SearchVO svo = gson.fromJson(reqdata, SearchVO.class);
+			
+			PaginationVO pvo = ntService.pageInfo(svo.getPage(), svo.getStype(), svo.getSword());
+			
+			
+			
+		
+//		// 게시글 조회 범위 정보 앱에 담아 전달
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", pvo.getStart());
+		map.put("end", pvo.getEnd());
+		map.put("stype", svo.getStype());
+		map.put("sword", svo.getSword());
+		
+//		
+//		// 게시글 조회
+		List<NoticeVO> ntList = ntService.ntList(map);
+//		
+//		// 화면에 정보 출력 ~ 페이징
+		
+		 request.setAttribute("ntList", ntList);
+		 request.setAttribute("sPage", pvo.getStartPage());
+		 request.setAttribute("ePage", pvo.getEndPage());
+		 request.setAttribute("ttPage", pvo.getTotalPage());
+
+
+		request.getRequestDispatcher("/board/notice/view/list.jsp").forward(request, response);
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

@@ -1,0 +1,185 @@
+@charset "UTF-8";
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+	font-size: var(--font-size-4xl);
+	font-weight: bold;
+}
+
+/* section-center 시작 */
+.section-center {
+	display: flex;
+	gap: 20px;
+}
+.left, .right {
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 40px;
+	border-radius: var(--br-xl);
+}
+
+/* left 시작 */
+.left {
+	width: 20%;
+	min-width: 250px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(var(--primary-p-80) 50%, #fff 50%  ); 
+}
+.user-name {
+	font-size: var(--font-size-2xl);
+	color: white;
+}
+.user-img {
+	width: 150px;
+    height: 150px;
+    text-align: center;
+    border-radius: 100%;
+    box-shadow: 0px 5px 10px #dcdcdc;
+    background-color: white;
+    margin: 20px 0 20px 0;
+    overflow: hidden;
+    background-image: url(http://localhost/university/mypage/img/user-alt.png);
+    background-position: center;
+}
+.user-img img {
+	object-fit: cover;
+    width: 100%;
+    /* height: 100%; */
+}
+.set-btn {
+	display: flex; 
+	gap: 10px;
+}
+#file {
+	display: none;
+}
+.img-insert, .img-trash {
+	padding: 0 10px;	
+}
+.img-insert {
+    background-image: url(http://localhost/svnTest/mypage/img/file.png);
+    background-position: 10px 10px;
+    height: 40px;
+    border: 1px solid var(--gray-bg-5);
+    background-color: white;
+    display: block;
+    padding: 10px 10px 0 35px;
+}
+.img-info {
+	margin-top: 15px;
+    text-align: center;
+    color: var(--gray-text-disabled);
+    font-size: 14px;
+}
+.img-insert:hover, .img-trash:hover {
+	background-color: var(--primary-p-5);
+}
+
+/* right 시작 */
+.right {
+	width: 80%;
+	display: flex; 
+	flex-direction: column;
+	gap: 50px;
+	padding: 40px;
+}
+.list-item {
+	width: 100%;
+}
+.item-title {
+	font-size: var(--font-size-2xl);
+	font-weight: bold;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--gray-line-dark);
+}
+.item-content {
+	display: flex;
+	gap: 10px;
+    flex-wrap: wrap;
+}
+.item {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin-top: 30px;
+}
+.item label {
+	color: var(--gray-text-disabled);
+}
+.item input, #zipbtn, .searchPw, .searchId, .img-insert, .img-trash {
+	border-radius: 10px;
+	height: 40px;
+}
+#name, #bir, #gen, #zipbtn {
+	width: 140px;
+}
+#phon, #email {
+	width: 250px;
+}
+#zip, #detail {
+	width: 380px;
+}
+#department-1 {
+	width: 270px;
+}
+#department-1 {
+	width: 250px;
+}
+#department-2,
+#department-3,
+#department-4,
+#department-5,
+#department-6 {
+	width: 150px;
+}
+.searchPw, .searchId {
+	padding: 0 10px;	
+	margin-right: 10px;
+}
+#zipbtn {
+	background-image: url(http://localhost/svnTest/mypage/img/search.png);
+    background-position: 110px 10px;
+}
+button:hover {
+	background-color: var(--primary-p-5);
+}
+
+/* table-bottom 시작 */
+.table-bottom {
+    width: 100%;
+    text-align: right;
+}
+.save-btn {
+    border: none;
+    background-color: var(--primary-p-50);
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    padding: 15px 60px;
+}
+.save-btn:hover {
+	background-color: var(--primary-p-60);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

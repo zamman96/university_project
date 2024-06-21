@@ -1,0 +1,61 @@
+package member.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+
+import member.dao.StudentDaoImpl;
+import member.service.IStudentService;
+import member.service.StudentServiceImpl;
+import member.vo.MemberVO;
+import member.vo.StuChangeVO;
+
+@WebServlet("/reg_typeUpdate.do")
+public class Reg_typeUpdate extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		
+		HttpSession session = request.getSession();
+		MemberVO vo = (MemberVO)session.getAttribute("login");
+		
+		String stuid = vo.getStu_id();
+		PrintWriter out = response.getWriter();
+		if(stuid==null) {
+			out.println("에잉..ㅉㅉ");
+			response.sendRedirect("http://localhost/student/searchStuChange.jsp"); 
+			return;
+		}
+		
+		IStudentService service = StudentServiceImpl.getInstance();
+		Gson gson = new Gson();
+		StuChangeVO stuChangeVo = gson.fromJson(stuid, StuChangeVO.class);
+		stuChangeVo.getStu_id();
+		
+		int result = service.reg_typeUpdate(stuid);
+		
+		request.setAttribute("result", result);
+		
+		request.getRequestDispatcher("/admin/student/reg_typeUpdate.jsp").forward(request, response);
+		
+		
+		
+		
+		
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

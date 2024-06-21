@@ -1,0 +1,106 @@
+package board.controller;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import board.service.BoardServiceImpl;
+import board.service.IBoardService;
+import board.vo.BoardVO;
+
+
+@WebServlet("/FileDownload.do")
+public class FileDownload extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		
+		String uploadPath="C:/project_2_university/file";
+						
+		//저장될 폴더가 없으면 새로 생성한다
+		File file =new File(uploadPath);
+		if(!file.exists()) {
+			file.mkdir();
+		}
+		
+		String filename=request.getParameter("file_name");
+		String bnum=request.getParameter("bnum");
+		int boardid=Integer.parseInt(bnum);
+		
+//		System.out.println(filename);
+//		System.out.println(bnum);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("file_save_name",filename);
+		map.put("board_id",boardid);
+		
+		
+		IBoardService service =BoardServiceImpl.getService();
+		
+		BoardVO vo=service.fileDownload(map);
+		
+		response.setCharacterEncoding("utf-8");
+		
+		File downFile=new File(file,vo.getFile_save_name());
+		
+		if(downFile.exists()) {
+			response.setContentType("application/octet-stream; charset=utf-8");
+			
+			String headerKey = "content-disposition";
+			
+			String headerValue="attachment; filename*=UTF-8''"+
+					URLEncoder.encode(vo.getFile_origin_name(), "utf-8").replace("\\+", "%20");
+			
+			response.setHeader(headerKey, headerValue);
+			
+			BufferedOutputStream bout = null;
+	        BufferedInputStream bin = null;
+			
+			try {
+				bout = new BufferedOutputStream(response.getOutputStream());
+				
+				bin = new BufferedInputStream(new FileInputStream(downFile));
+				
+				byte[] temp = new byte[1024];
+				
+				int len = 0;
+	            while((len = bin.read(temp)) > 0) {
+	               bout.write(temp, 0, len);
+	            }
+	            
+	            bout.flush();
+				
+				
+			} catch (Exception e) {
+	            System.out.println("입출력 오류 : " + e.getMessage());
+			} finally {
+	            if(bout!=null) try {bout.close();} catch(IOException e) {}
+	            if(bin!=null) try {bin.close();} catch(IOException e) {}
+	         }
+			
+		}else {
+			
+			response.setContentType("text/html; charset=utf-8");
+			response.getWriter().println("<h3>"+vo.getFile_origin_name()
+													+"파일이 존재하지않습니다.</h3>");
+		}
+		
+		
+		
+		
+	}
+
+}

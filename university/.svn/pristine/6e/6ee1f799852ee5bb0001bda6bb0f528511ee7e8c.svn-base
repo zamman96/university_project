@@ -1,0 +1,131 @@
+@charset "UTF-8";
+
+/* mypage 시작 */
+.mypage {
+	display: flex;
+}
+
+/* 공통 css 시작 */
+.side-menu {
+	display: flex;
+	flex-direction: column;    
+	box-sizing: border-box;
+	padding: var(--pd-box);
+	gap: var(--gap-layout-2);
+	user-select: none;
+}
+.logo {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--gap-layout-1);
+	cursor: pointer; 
+}
+.logo-img {
+	width: 55px;
+	height: 46px;
+	line-height: 46px;
+	text-align: center;
+	border-radius: var(--br-logo);
+	background-color: var(--primary-p-90);
+}
+.logo-title {
+	font-size: var(--font-size-logo);
+	font-weight: 600;
+}
+
+/* menu1 시작 */
+.menu1 {
+	display: flex;
+	flex-direction: column;
+	cursor: pointer; 
+    padding: var(--pd-side-item-x) var(--pd-side-item-y);
+	border-radius: var(--br-side-item);	
+}
+/* menu 마우스 오버 효과 */
+.menu1:hover .menu1-img {
+	filter: var(--filter-p-50);
+}
+.menu1:hover .menu1-text {
+	color: var(--primary-p-50);
+	font-weight: bold;
+}
+/* menu1 클릭 효과 */
+.menu1.click {
+	color: white;
+	background: linear-gradient(#246BEB, #16408D);
+}
+.menu1.click .menu1-img {
+	filter: brightness(0) invert(1);
+}
+.menu1.click .menu1-text {
+	color: white;
+	font-weight: bold;
+}
+
+/* 대메뉴 시작 */
+.top-box {
+	display: flex;
+    gap: var(--gap-layout-1);
+    align-items: center;
+}
+.menu1-img {
+	width: 20px;
+	height: 20px;
+}
+.menu1-text {
+	font-size: var(--font-size-lg);
+}
+
+/* 소메뉴 시작 */
+.bottom-box {
+	color: white;
+}
+.bottom-box.hide {
+	display: none;
+}
+.menu1 .bottom-box .link {
+	margin-top: 15px;
+	padding: 0 5px;
+}
+.menu1 .bottom-box .link a {
+	color: white;
+}
+.menu1 .bottom-box .link a:hover {
+	text-decoration: underline !important;
+}
+
+/* menu2 시작 */
+.menu2 {
+	border-radius: var(--br-side-item);
+	cursor: pointer; 
+	padding: var(--pd-side-item-x) var(--pd-side-item-y);
+	flex-direction: row;
+	align-items: center;
+	gap: var(--gap-layout-1);
+}
+.menu2 .top-box {
+	display: flex;
+	gap: var(--gap-layout-1);
+}
+.menu2-img {
+	width: 20px;
+	height: 20px;
+}
+.menu2-text {
+	font-size: var(--font-size-lg);
+}
+.top-box:hover .menu2-img {
+	filter: var(--filter-p-50);
+}
+.top-box:hover .menu2-text {
+	font-weight: bold;
+	color: var(--primary-p-50);
+}
+
+
+
+
+
+
+

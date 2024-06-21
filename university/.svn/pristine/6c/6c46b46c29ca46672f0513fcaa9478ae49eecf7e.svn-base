@@ -1,0 +1,36 @@
+package notice.service;
+
+import java.util.List;
+import java.util.Map;
+
+import notice.vo.NoticeVO;
+import notice.vo.PaginationVO;
+
+public interface INoticeService {
+
+	public List<NoticeVO> ntList(Map<String, Object> map);
+	
+	public NoticeVO ntGet(int board_id);
+
+//	public int countList2(String ntTit);
+
+	public int ntDelete(int board_id);
+
+	public int ntHit(int board_id);
+
+	public List<NoticeVO> ntSearch(Map<String, Object> map);
+
+	public int ntUpdate(NoticeVO nv);
+
+	public int ntInsert(NoticeVO nv);
+
+	public PaginationVO pageInfo(int page, String stype, String sword);
+
+
+
+
+
+	
+	
+	
+}

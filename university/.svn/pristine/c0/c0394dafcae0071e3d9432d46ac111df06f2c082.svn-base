@@ -1,0 +1,39 @@
+package noticeBoard.dao;
+
+import java.util.List;
+import java.util.Map;
+
+
+import noticeBoard.vo.NoticeBoardVO;
+
+public interface INoticeBoardDao {
+
+	
+	public List<NoticeBoardVO> selectNotice(Map<String, Object> map);
+//	public int boardCnt(NoticeBoardVO noticeBoardVO);
+
+
+
+
+
+	public int updateBoard(NoticeBoardVO vo);
+
+	public int deleteBoard(int num);
+
+	public int updateHit(int num);
+
+	public NoticeBoardVO detailBoard(int num);
+
+	public int getTotalCount(Map<String, Object> map);
+
+
+
+	public int insertBoard(NoticeBoardVO vo);
+	public List<NoticeBoardVO> selectqaBoard();
+
+
+
+	public List<NoticeBoardVO> NoticeBoard();
+
+	
+}

@@ -1,0 +1,81 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+:root {
+  /* fonts */
+  --font-pretendard: Pretendard;
+
+  /* font sizes */
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-sm: 14px;
+  --font-size-11xl: 30px;
+  --font-size-7xl: 26px;
+  --font-size-5xl: 24px;
+
+  /* Colors */
+  --bg-0: #eff0f5;
+  --white: #fff;
+  --gray-line-box: #e4e4e4;
+  --gray-bg-5: #d9d9d9;
+  --gray-text-disabled: #8e8e8e;
+  --gray-text-title: #1d1d1d;
+  --primary-p-90: #07152f;
+  --primary-p-40: #5089ef;
+  --gray-text-body: #555;
+  --primary-p-5: #eff5ff;
+  --primary-p-80: #0e2b5e;
+  --color-black: #000;
+  --color-darkseagreen-100: #6ab686;
+
+  /* Gaps */
+  --gap-layout-1: 20px;
+  
+  --gap-21xl: 40px;
+  --gap-xl: 20px;
+  --gap-8xs: 5px;
+  --gap-9xs: 4px;
+  --gap-3xs: 10px;
+  --gap-7xs: 6px;
+  --gap-11xl: 30px;
+  --gap-lgi: 19px;
+  --gap-mini: 15px;
+
+  /* Paddings */
+  --pd-select-x: 15px;
+  --pd-select-y: 10px;
+  
+  --padding-21xl: 40px;
+  --padding-3xs: 10px;
+  --padding-mini: 15px;
+  --padding-5xl: 24px;
+  --padding-xl: 20px;
+  --padding-61xl: 80px;
+  --padding-base: 16px;
+  --padding-11xl: 30px;
+  --padding-8xl: 27px;
+
+  /* Border radiuses */
+  --br-sel: 2px;
+  
+  --br-xl: 20px;
+  --br-5xs: 8px;
+  --br-11xs: 2px;
+  --br-mini: 15px;
+  --br-3xs: 10px;
+  --br-81xl: 100px;
+  
+
+  /* Effects */
+  --shadow: drop-shadow(0px 20px 50px rgba(55, 69, 87, 0.1));
+}

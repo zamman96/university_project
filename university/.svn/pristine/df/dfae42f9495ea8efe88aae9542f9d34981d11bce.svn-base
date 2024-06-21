@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="score">
+<!-- 학생이 수강한 년도 가져올것 -->
+	<select id="yearTerm" parameterType="String" resultType="scoreVo">
+		SELECT DISTINCT year || '년 ' || term AS course_term, year, term
+		FROM course
+		where stu_id=#{stu_id}
+		ORDER BY TO_NUMBER(year), to_number(substr(term,1,1))
+	</select>
+	
+	<sql id="DynamicType">
+		<if test="subject_type !=null and subject_type != ''">
+			and b.subject_type = #{subject_type}
+		</if>
+	</sql>
+	<sql id="DynamicYear">
+		<if test="year !=null and year != ''">
+			and a.year = #{year}
+		</if>
+	</sql>
+	<sql id="DynamicTerm">
+		<if test="term !=null and term != ''">
+			and a.term = #{term}
+		</if>
+	</sql>
+	
+	<select id="countCredit" parameterType="scoreVo" resultType="int">
+		select sum(b.subject_credit)
+		from score a, subject b
+		where a.subject_id=b.subject_id
+		and a.stu_id =#{stu_id}
+		and to_number(a.all_score)>0
+		<include refid="DynamicType"/>
+		<include refid="DynamicYear"/>
+		<include refid="DynamicTerm"/>
+	</select>
+	
+	<select id="scoreCal" parameterType="scoreVo" resultType="scoreVo">
+		select round(sum(all_score)/count(*),2) avg, sum(all_score) sum
+		from score a
+		where stu_id = #{stu_id}
+		<include refid="DynamicYear"/>
+		<include refid="DynamicTerm"/>
+	</select>
+	
+	<select id="scoreStuList" parameterType="scoreVo" resultType="scoreVo">
+		select a.year, a.term, a.subject_id, b.subject_name, b.subject_type, b.subject_credit, a.all_score
+		from score a, subject b
+		where a.subject_id=b.subject_id
+		and a.stu_id=#{stu_id} 
+		<include refid="DynamicYear"/>
+		<include refid="DynamicTerm"/>
+		order by a.subject_id
+	</select>
+</mapper>

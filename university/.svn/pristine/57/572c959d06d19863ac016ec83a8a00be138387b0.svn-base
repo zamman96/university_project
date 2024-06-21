@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="board">
+	<insert id="insertBoard" parameterType="boardVo">
+		insert into board
+		values(#{board_type},(select nvl(max(board_id),0)+ 1 from board), #{mem_id} , #{board_title}, sysdate, #{board_content}, 0,#{board_file})
+	</insert>
+	
+	<insert id="insertBoardFile">
+		insert into board_file
+		values( 1, (select max(board_id)
+					from board
+					where board_type='1'),
+		(select max(file_id)
+		from attach_file) )
+	</insert>
+	
+	<insert id="insertReply" parameterType="replyVo">
+		insert into reply (reply_id, board_type, board_id, mem_id, reply_date, reply_content)
+		select nvl(max(reply_id), 0) + 1,
+    		#{board_type},
+    		#{board_id},
+    		#{mem_id},
+    		sysdate,
+    		#{reply_content}
+		from 
+    		reply
+		where board_id=#{board_id}
+		and board_type=#{board_type}
+	</insert>
+	
+	<update id="updateReply" parameterType="replyVo">
+		update reply
+		set mem_id=#{mem_id},
+		reply_date = sysdate,
+		reply_content = #{reply_content}
+		where board_type=#{board_type}
+		and board_id=#{board_id}
+		and reply_id=#{reply_id}
+	</update>
+	
+	<delete id="deleteReplyPart" parameterType="replyVo">
+		delete from reply
+		where board_type=#{board_type}
+		and board_id=#{board_id}
+		and reply_id=#{reply_id}
+	</delete>
+	
+	<select id="selectReply" parameterType="replyVo" resultType="replyVo">
+		select *
+		from reply a, member b
+		where a.mem_id=b.mem_id
+		and board_id=#{board_id}
+		and board_type=#{board_type}
+	</select>
+	
+	<!-- 동적쿼리  -->
+	<sql id="dynamicTitle">
+	   <if test="board_title != null and board_title != ''">
+	           and board_title like '%'|| #{board_title} || '%'
+	   </if>
+	</sql>
+	<sql id="dynamicContent">
+	   <if test="board_content != null and board_content != ''">
+	           and board_content like '%'|| #{board_content} || '%'
+	   </if>
+	</sql>
+	<sql id="dynamicName">
+	   <if test="mem_name != null and mem_name != ''">
+	           and b.mem_name like '%'|| #{mem_name} || '%'
+	   </if>
+	</sql>
+	
+	<select id="selectByPage" parameterType="boardVo" resultType="boardVo">
+		select board_type,board_id,mem_id, board_title,board_date,board_content,board_hit, mem_name from
+	        ( select  board_type,board_id, 
+	        			b.mem_id, board_title,
+	        			to_char(board_date,'yyyy-mm-dd') board_date, 
+	        			board_content, 
+	        			board_hit,
+	        			b.mem_name, 
+	        			rownum rs
+	        	from board a, member b
+	          	where board_type=#{board_type}
+	          	and a.mem_id=b.mem_id
+	          	<include refid="dynamicTitle"/>
+	          	<include refid="dynamicContent"/>
+	          	<include refid="dynamicName"/>
+       			order by board_id desc ) 
+	          where rs between #{start} and #{end}
+	 </select>
+	 
+	<select id="selectByPageCount" parameterType="boardVo" resultType="int">
+	        select  count(*)
+	        	from board a, member b
+	          	where board_type=#{board_type}
+	          	and a.mem_id=b.mem_id
+	          	<include refid="dynamicTitle"/>
+	          	<include refid="dynamicContent"/>
+	          	<include refid="dynamicName"/>
+	 </select>
+	
+	<select id="detail" parameterType="boardVo" resultType="boardVo">
+		SELECT 
+		    b.board_type, 
+		    b.board_id, 
+		    m.mem_name,
+		    m.mem_id,
+		    b.board_title,
+		    TO_CHAR(b.board_date, 'yyyy-mm-dd') AS board_date,
+		    b.board_content, 
+		    b.board_hit,
+		    b.board_file,
+		    c.file_id,
+		    c.file_origin_name,
+		    c.file_save_name,
+		    r.reply_content,
+		    TO_CHAR(r.reply_date, 'yyyy-mm-dd') AS reply_date
+		FROM 
+		    board b
+		    JOIN member m ON b.mem_id = m.mem_id
+		    LEFT OUTER JOIN board_file bf ON b.board_id = bf.board_id AND b.board_type = bf.board_type
+		    LEFT OUTER JOIN attach_file c ON bf.file_id = c.file_id
+		    LEFT OUTER JOIN reply r ON b.board_id = r.board_id
+		WHERE b.board_id = #{board_id}
+		  AND b.board_type = #{board_type}
+	</select>
+	
+	<update id="updateBoard" parameterType="boardVo">
+		update board set 
+		board_title=#{board_title}, 
+		board_content=#{board_content},
+		board_date= sysdate
+		where board_id = #{board_id} 
+		and board_type= #{board_type}
+	</update>
+	
+	 <update id="updateHit" parameterType="boardVo" >
+	 update board 
+	 set board_hit=board_hit+1  
+	 where board_id = #{board_id} 
+	 and board_type= #{board_type}
+	 </update>
+	
+	
+	<delete id="DeleteBoard" parameterType="boardVo">
+		delete from board 
+		where board_id=#{board_id} 
+		and board_type= #{board_type}
+	</delete>
+	
+	<delete id="deleteAttachFile" parameterType="boardVo">
+		delete from attach_file
+		where file_save_name = #{file_save_name}
+	</delete>
+	
+	<delete id="deleteBoardFile" parameterType="boardVo">
+		delete from board_file
+    	where board_id = #{board_id} 
+    	and board_type = #{board_type}
+	</delete>
+	
+	<delete id="deleteReply" parameterType="boardVo">
+		delete from reply
+    	where board_id = #{board_id} 
+    	and board_type = #{board_type}
+	</delete>
+	
+	<!-- 230615 정기쁨 추가 시작 -->
+	
+	<!-- 메인의 공지게시판에 출력 -->
+	<select id="selectNotiBoard" resultType="boardVo">
+		select board_title,
+			   board_date
+		  from board 
+		 where board_type = '0'   
+	  order by board_date desc  	   
+	</select>
+	
+	<!-- 메인의 문게시판에 출력 -->
+	<select id="selectQuestBoard" resultType="boardVo">
+		select board_title,
+			   board_date
+		  from board 
+		 where board_type = '1'   
+	  order by board_date desc  	   
+	</select>
+	<!-- 230615 정기쁨 추가 끝 -->
+	
+</mapper>

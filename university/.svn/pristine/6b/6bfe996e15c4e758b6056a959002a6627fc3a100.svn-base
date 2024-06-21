@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="major">
+	<select id="colList" resultType="majorVo">
+		select *
+		from colleage
+		order by col_name
+	</select>
+	
+	<sql id="dynamicMajor">
+	<where>
+		<if test="col_id > 0">
+			a.col_id=#{col_id}
+		</if>
+	</where>
+	</sql>
+	
+	<select id="majorList" parameterType="int" resultType="majorVo">
+		select *
+		from major a
+		left outer join colleage b on a.col_id=b.col_id
+		<include refid="dynamicMajor"/>
+		order by a.major_name
+	</select>
+	
+	<sql id="dynamicGraduate">
+		<if test="graduate_date == null or graduate_date == ''">
+			and b.graduate_date is null
+		</if>
+		
+		<if test="graduate_date != null and graduate_date != ''">
+			and b.graduate_date is not null
+		</if>
+	</sql>
+	
+	<sql id="dynamicName">
+		<if test="mem_name != null and mem_name != ''">
+			and a.mem_name like '%'||#{mem_name}||'%'
+		</if>
+	</sql>
+	<sql id="dynamicId">
+		<if test="mem_id != null and mem_id != ''">
+			and a.mem_id like '%'||#{mem_id}||'%'
+		</if>
+	</sql>
+	
+	<select id="majorStudent" parameterType="studentVo" resultType="studentVo">
+		select * from(
+		select a.mem_id, a.mem_pass, a.mem_name, to_char(a.mem_bir,'yyyy-mm-dd') mem_bir, a.mem_gender, a.mem_add, a.mem_tel, a.mem_mail, b.stu_grade, to_char(b.graduate_date,'yyyy-mm-dd') graduate_date, c.major_name, rownum rs
+		from member a, student b, major c
+		where a.mem_id=b.stu_id
+		and c.major_id=b.major_id
+		and c.major_id=#{major_id}
+		<include refid="dynamicGraduate"/>
+		<include refid="dynamicName"/>
+		<include refid="dynamicId"/>
+		<![CDATA[) where rs between #{start} and #{end} 
+		  ]]>
+	</select>
+	
+	<select id="majorStudentCount" parameterType="studentVo" resultType="int">
+		select count(*)
+		from member a, student b, major c
+		where a.mem_id=b.stu_id
+		and c.major_id=b.major_id
+		and c.major_id=#{major_id}
+		<include refid="dynamicGraduate"/>
+		<include refid="dynamicName"/>
+		<include refid="dynamicId"/>
+	</select>
+</mapper>

@@ -1,0 +1,412 @@
+@charset "UTF-8";
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+}
+
+/* section-center 시작 */
+.section-center {	
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 30px 30px;
+	border-radius: var(--br-xl);
+	min-width: 900px;
+	overflow: auto;
+}
+.list-title {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    margin-bottom: 10px;
+   	display: flex;	
+    gap: 10px;
+}
+.list-title span {
+	font-size: 18px;	
+    font-weight: bold;
+}
+.lectureAdd {
+	padding: 4px 8px;
+    background: #f58d39;
+    font-weight: bold;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+}
+.lectureAdd:hover {
+    background: #f1842d;
+    color: white;
+}
+
+/* 검색 영역 시작 */
+#subf {
+	display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.select-boxs {
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+.sel-box {
+	padding: 5px 5px;
+}
+.sel-box select {
+	border: none;
+	outline: none;
+}
+.search-box {
+	display: flex;
+    padding: 8px 15px;
+    border-radius: 100px;
+    border: 1px solid var(--gray-line-box);
+}
+.search-input {
+	border: none;
+	outline: none;
+	font-size: 16px;
+    padding: 0 10px 0 0;
+    width: 205px;
+}
+.search-btn {
+	cursor: pointer;
+    width: 20px;
+}
+.search-btn:hover {
+	filter: var(--filter-p-50);
+}
+
+/* 테이블 시작 */
+.table-wrap {
+	width: 100%; 
+	overflow: auto;
+    text-align: center;
+}
+.table-wrap table {
+	white-space: nowrap;
+	width: 100%;
+}
+.table-wrap th, td {
+	height: 50px;
+	padding: 0 var(--pd-table);
+}
+.table-wrap th {
+	background: var(--primary-p-5);
+	text-align: center;
+}
+.table-wrap td {
+	border-top: 1px solid var(--table-td);
+	border-bottom: 1px solid var(--table-td);
+}
+thead tr {
+	position: sticky;
+	top: -1px;
+	background-color: #f9f9f9;
+	z-index: 1; /* Make sure the header stays on top */
+}
+#lectureList, #courseList{
+    max-height: 321px;
+	overflow: auto;    
+	border-top: 1px solid var(--gray-line-dark);
+}
+.deleteCourse, .insertCourse, .disableCourse {
+	padding: 8px 16px;
+    background-color: white;
+    border: none;
+}
+.deleteCourse:hover, .insertCourse:hover {
+    background-color: #fff6da;
+    border: none;
+    border-radius: 100px;
+    font-weight: 600;
+}
+.disableCourse:hover {
+	cursor: no-drop;
+}
+/* 스크롤 */
+.table-wrap::-webkit-scrollbar {
+	height: 20px;
+	width: 20px;
+}
+.table-wrap::-webkit-scrollbar-thumb {
+	background-color: var(--gray-bg-5);
+	border-radius: 100px;
+    background-clip: padding-box;
+    border: 5px solid transparent;
+}
+.table-wrap::-webkit-scrollbar-track {
+    background-color: #f8f8f8;
+}
+/* 페이지네이션 시작 */
+.pagination-wrap {
+	text-align: center;
+}
+.pagination {
+  display: inline-block;
+}
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  border-radius: var(--br-2xs);
+  margin: 0 4px;
+}
+.pagination a.active {
+  background-color: var(--primary-p-40);
+  color: white;
+}
+.pagination a:hover:not(.active) {background-color: var(--primary-p-5);}
+
+/* 모달 */
+dialog{
+	z-index: 1000; /* 다른 모달창의 z-index */
+	padding: 0;
+	border: none;
+	border-radius: 6px;
+	box-shadow: 0 25px 40px -20px #3c4a56;
+    height: 700px;
+    position: fixed;
+    background-color: var(--bg-1);
+}
+.dialog__animate-out{
+  animation: dissappear .8s cubic-bezier(.77,0,.175,1) forwards;
+}
+.dialog__inner {
+  display: flex;
+  flex-direction: column;
+  color: #838282;
+  background-color: var(--bg-1);
+  gap: 10px;
+}
+.dialog__inner__top {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-p-80);
+    padding: 10px 20px;
+    color: white;
+    position: fixed;
+    width: 1300px;
+}
+.dialog__content {
+	padding: 0 $default--padding $default--padding $default--padding;
+}
+.modal-wrap {
+	display: flex;
+	justify-content: space-between;
+    gap: 20px;
+    padding: 20px 30px;
+    margin-top: 70px;
+}
+.modal-wrap-title {
+	font-size: 20px;
+    color: var(--gray-text-title);
+    font-weight: bold;
+    border-bottom: 1px solid var(--gray-line-dark);
+    padding-bottom: 10px;
+}
+.modal-bottom {
+	width: 100%;
+	text-align: right;
+    padding: 10px 30px 40px 0;
+}
+.sel-box-inline {
+	display: flex;
+	gap: 4px;
+}
+.sel-box-inline .sel2-box {
+	width: 50%;
+}
+.sel2-boxs, .item-boxs {
+	padding: 20px 25px 40px 25px;
+	background-color: white;
+    border-radius: var(--br-xl);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.sel2-box-result {
+	/* width: 260px; */
+    border: 1px solid var(--gray-line-box);
+    padding: 10px 8px;
+    color: var(--gray-text-title);
+    border-radius: 4px;
+}
+.w-260 {
+	width: 260px;
+}
+#modal1 .sel2-zip .sel2-box .sel2-box-result {
+	width: 76px;
+}
+.item-box-result {
+    border: 1px solid var(--gray-line-box);
+    padding: 10px 8px;
+    color: var(--gray-text-title);
+    border-radius: 4px;
+}
+#modal1 .subject_name {
+	width: -webkit-fill-available;
+    padding-right: 50px;
+}
+.subject_theory, .subject_training {
+	width: 100px;
+}
+.item-box-text {
+	width: 530px;
+	padding: 10px;
+	border: 1px solid var(--gray-line-box);
+	color: var(--gray-text-title);
+    border-radius: 4px;
+}
+.disabled {
+	background: var(--bg-0);
+	color: var(--gray-text-disabled);
+} 
+.button {
+    border: none;
+    background-color: #afb8c9;
+    padding: 17px $ default--padding 17px $ default--padding;
+    border-radius: 30px;
+    font-size: 15px;
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    box-shadow: 0 10px 25px #3c4a5645;
+    outline: none;
+    cursor: pointer;
+}
+.button-close {
+	padding: 10px;
+	align-self: flex-end; 
+	background-color: transparent;
+	box-shadow: none;
+	color: #838282;
+}
+.button-close:hover {
+	color: white;
+}
+#updateList, #delete, #update, #cancel {
+    border: none;
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    border-radius: 4px;
+    height: 50px;
+}
+#updateList, #update {
+	background-color: var(--primary-p-50);
+}
+#updateList:hover, #update:hover {
+	background-color: var(--primary-p-60);
+}
+#delete, #cancel {
+	background-color: var(--gray-text-disabled);
+} 
+#delete:hover, #cancel:hover {
+	background-color: var(--gray-text-body);
+} 
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dissappear {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+#mul-stu{
+	width : 100%;
+	max-width: 1000px;
+	overflow: auto;
+}
+#mul-stu table{
+	text-align : center;
+}
+
+ #mul-stu-list {
+   max-height: 200px;
+   overflow: scroll;
+   overflow-x: auto; /* 가로 스크롤을 허용합니다. */
+        white-space: nowrap; /* 자식 요소들이 줄 바꿈 없이 한 줄에 나타나도록 합니다. */
+}
+
+/* section-bottom  */
+.submit{
+	padding: 0 40px;
+}
+.submit:active{
+ 	background: var(--primary-p-70);
+ }
+.submit:disabled{
+ 	background: var(--bs-gray-500);
+ }
+.section-bottom{
+	display:flex;
+	justify-content:flex-end;
+	width: 90%;
+	margin: 10px auto;
+}
+.subjectSelect:hover{
+ 	background: var(--primary-p-50);
+ 	color: white;
+ 	font-weight: bold;
+}
+
+/* 페이지네이션 시작 */
+.pagination-wrap {
+	text-align: center;
+}
+
+.pagination {
+  width: 100%;
+  justify-content: center;
+  padding: 40px;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  border-radius: var(--br-2xs);
+  margin: 0 4px;
+}
+
+.pagination a.active {
+  background-color: var(--primary-p-40);
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: var(--primary-p-5);}
+

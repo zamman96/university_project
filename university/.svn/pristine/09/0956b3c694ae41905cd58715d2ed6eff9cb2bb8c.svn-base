@@ -1,0 +1,227 @@
+package notice.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.SqlSession;
+
+
+import notice.vo.NoticeVO;
+import util.MyBatisUtil;
+
+public class NoticeDaoImpl implements INoticeDao {
+	private static INoticeDao ntDao =  new NoticeDaoImpl();
+	
+	private NoticeDaoImpl() {
+		
+	}
+
+	public static INoticeDao getInstance() {
+		
+		return ntDao;
+	}
+
+	@Override
+	public List<NoticeVO> ntList(Map<String, Object> map) {
+		SqlSession session = MyBatisUtil.getSqlSession();
+		
+		List<NoticeVO> ntList = null;
+		
+		try {
+//			ntList = session.selectList("nt.ntList", map);
+			ntList = session.selectList("nt.ntSearch2", map);
+		}catch(PersistenceException ex) {
+			ex.printStackTrace();
+		}finally {
+			session.close();
+		}
+		
+		return ntList;
+	}
+
+	@Override
+	public NoticeVO ntGet(int board_id) {
+		SqlSession session = MyBatisUtil.getSqlSession(true);
+		
+		NoticeVO nv = null;
+		
+		try {
+			nv = session.selectOne("nt.ntGet", board_id);
+		}catch(PersistenceException ex) {
+			ex.printStackTrace();
+		}finally {
+			session.close();
+		}
+		
+		return nv;
+	}
+
+
+
+	@Override
+	public int ntUpdate(NoticeVO nv) {
+		int result=0;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.update("nt.ntupdate", nv);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return result;
+	}
+	@Override
+	public int ntDelete(int board_id) {
+		SqlSession session = null;
+		
+		int result = 0;
+		
+		try {
+			session = MyBatisUtil.getSqlSession();
+			
+			result = session.insert("nt.ntDelete", board_id);
+			
+			if(result > 0) {
+				session.commit();
+			}
+		}catch(PersistenceException ex) {
+			ex.printStackTrace();
+		}finally {
+			session.close();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int ntHit(int board_id) {
+		SqlSession session = null;
+		
+		int result = 0;
+		
+		try {
+			session = MyBatisUtil.getSqlSession();
+			
+			result = session.insert("nt.ntHit", board_id);
+			
+			if(result > 0) {
+				session.commit();
+			}
+		}catch(PersistenceException ex) {
+			ex.printStackTrace();
+		}finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	
+	@Override
+	public List<NoticeVO> ntSearch(Map<String, Object> map) {
+		SqlSession session = MyBatisUtil.getSqlSession();
+		
+		List<NoticeVO> ntList = null;
+		
+		try {
+			ntList = session.selectList("nt.ntSearch", map);
+		}catch(PersistenceException ex) {
+			ex.printStackTrace();
+		}finally {
+			session.close();
+		}
+		
+		return ntList;
+	}
+
+//	@Override
+//	public int countList() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public int countList2(String ntTit) {
+//		SqlSession session = MyBatisUtil.getSqlSession();
+//		
+//		int countAll = 0;
+//		
+//		try {
+//			countAll = session.selectOne("nt.countList2", ntTit);
+//		}catch(PersistenceException ex) {
+//			ex.printStackTrace();
+//		}finally {
+//			session.close();
+//		}
+//		
+//		return countAll;
+//	}
+	
+//	@Override
+//	public int ntInsert(NoticeVO nv) {
+//		SqlSession session = null;
+//		
+//		int result = 0;
+//		
+//		try {
+//			session = MyBatisUtil.getSqlSession();
+//			
+//			result = session.insert("nt.ntInsert", nv);
+//			
+//			if(result > 0) {
+//				session.commit();
+//			}
+//		}catch(PersistenceException ex) {
+//			ex.printStackTrace();
+//		}finally {
+//			session.close();
+//		}
+//		
+//		return result;
+//	}
+	@Override
+	public int ntInsert(NoticeVO nv) {
+		SqlSession session = null;
+		
+		int result = 0;
+		
+		try {
+			session = MyBatisUtil.getSqlSession();
+			
+			result = session.insert("nt.ntInsert", nv);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				session.commit();
+				session.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int getTotalCount(Map<String, Object> map) {
+		int result=0;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.selectOne("nt.getTotalCount",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return result;
+	}
+
+}

@@ -1,0 +1,72 @@
+<%@page import="member.vo.StuChangeVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<%
+
+List<StuChangeVO> searchList = 
+					(List<StuChangeVO>)request.getAttribute("searchList");
+
+%>
+<!-- <script>
+
+ $(function(){
+	
+ 	$('#search').on('click',function(){
+		
+ 	})
+ })
+
+ </script> -->
+<body>
+<h3>학적변경 신청학생 리스트</h3>
+
+<input type="button" value="학적변경 신청학생 조회" onclick="location.href='<%=request.getContextPath()%>/searchStuChangeList.do'">
+<input type="button" value="휴학신청 학생조회" onclick="location.href='<%=request.getContextPath()%>/reg_typeChangeList.do'">
+<input type="button" value="복학신청 학생조회" onclick="location.href='<%=request.getContextPath()%>/reg_typeChangeList2.do'">
+<table border="1">
+<thead>
+		
+	<tr>
+		<th>이름</th><th>년도</th><th>학기</th><th>학번</th><th>신청일</th><th>구분</th><th>사유</th>
+	</tr>	
+</thead>
+<tbody>
+<%
+	if(searchList==null || searchList.size()==0){
+%>
+	<tr>
+		<td colspan="7">학생 리스트가 없습니다!!</td>
+	</tr>
+<%
+	}else{
+		for(StuChangeVO vo : searchList){
+			
+%>
+	<tr>
+		<td><%=vo.getMem_name() %></td>
+		<td><%=vo.getYear() %></td>
+		<td><%=vo.getTerm() %></td>
+		<td><%=vo.getStu_id() %></td>
+		<td><%=vo.getReg_date() %></td>
+		<td><%=vo.getReg_type() %></td>
+		<td><%=vo.getReg_content() %></td>
+<%-- 		<td><%=vo.getApply_type() %></td> --%>
+<%-- 		<td><%=vo.getProcess_date() %></td> --%>
+	</tr>
+<%
+		}
+		
+	}
+%>
+</tbody>
+</table>
+
+</body>
+</html>

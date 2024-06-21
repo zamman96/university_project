@@ -1,0 +1,286 @@
+@charset "UTF-8";
+
+a:hover {
+	text-decoration: underline !important;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+	display: flex;
+	justify-content: space-between;
+}
+.section-top-left {
+	display: flex;
+	gap: 15px;
+}
+.user-img {
+	width: 60px;
+	height: 58px;
+	border-radius: 100%;
+	background-image: url(http://localhost/university/main/img/user-img.png);
+	overflow: hidden;
+}
+.user-info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.user-name {
+	font-size: var(--font-size-2xl);
+}
+.user-belong {
+	display: flex;
+	gap: 10px;
+}
+.section-top-right {
+	display: flex;
+	gap: 10px;
+}
+.section-top-right .btn {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-content: center;
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	font-size: var(--font-size-sm);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.section-top-right .btn:hover {
+    background-color: var(--primary-p-5);
+}
+.section-top-right .btn img {
+	width: 20px;
+	height: 20px;
+}
+
+/* section-center 시작 */
+.section-center {
+	display: flex;
+	gap: var(--pd-box);
+	justify-content: space-between;
+}
+.section-center-left .alarm, 
+.section-center-left .student, 
+.section-center-left .lecture, 
+.section-center-right .board {
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 30px 0;
+	border-radius: var(--br-xl);
+}
+.section-title {
+	display: flex;
+	justify-content: space-between;
+    align-items: center;
+}
+.plus-section {
+	margin-right: 20px;
+}
+.plus-section a {
+	color: var(--gray-text-title);
+	font-weight: bold;
+}
+.plus-section:hover a {
+	color: var(--primary-p-50);
+}
+.plus-section img{
+	vertical-align: text-top;
+}
+.plus-section:hover img{
+	filter: var(--filter-p-50);
+}
+.icon-section {
+	display: flex;
+	font-size: var(--font-size-4xl);
+	font-weight: bold;
+	align-items: center;
+}
+.question-img,
+.notification-img,
+.alarm-img,
+.student-img,
+.lecture-img{
+	border-radius: 0 20px 20px 0;
+	width: 60px; 
+	height: 60px;
+	text-align: center;
+    line-height: 55px;
+    margin-right: 10px;
+}
+.question-img img,
+.notification-img img,
+.alarm-img img
+.student-img img,
+.lecture-img img{
+	width: 32px; 
+	height: 32px;
+}
+.question-img {
+	background-color: #87318B;
+}
+.notification-img {
+	background-color: #E96C81;
+}
+.alarm-img {
+	background-color: #EF946E;
+}
+.student-img {
+	background-color: #6AB686;
+}
+.lecture-img {
+	background-color: #6AB686;
+}
+
+/* 게시판 시작 */
+.section-center-right {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pd-box);
+	width: 40%;
+	min-width: 400px;
+}
+.section-center-right .board {
+	height: 400px;
+}
+.content-items {
+	padding: 30px 30px 0 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.content-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+.content-item img {
+	margin-right: 4px;
+}
+.content-item .link {
+	min-width: 100px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.content-item .link a {
+	color: var(--gray-text-body);
+}
+.content-item .link a:hover {
+	text-decoration: underline;
+}
+.content-item .data {
+	min-width: 110px
+}
+
+/* section-center-left 시작 */
+.section-center-left {
+    width: 60%;
+    min-width: 640px;
+    display: flex;
+   	flex-direction: column;
+	gap: var(--pd-box);
+}
+
+/* alarm-items 시작 */
+.alarm {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.alarm-items {
+	display: flex;
+	justify-content: flex-end;
+	gap: 30px;
+	padding-right: 20px;
+}
+.alarm-item a {
+	font-size: 22px;
+}
+.alarm-item a:hover {
+	text-decoration: underline;
+}
+.alarm-item a span {
+	font-weight: bold;
+	color: var(--primary-p-60);
+	font-size: var(--font-size-2xl);
+}
+
+/* 학생관리, 강의관리 시작 */
+.link-lists {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 20px;
+    padding: 30px 30px 0 30px;
+}
+.link-list {
+	display: flex;
+	gap: 40px;
+	width: 100%;
+}
+.link-box {
+	align-items: center;
+	background-color: #f0f1fe;
+	display: flex;
+	width: 100%;
+    padding: 0 20px;
+    height: 106px;
+    gap: 15px;
+	font-size: var(--font-size-3xl);
+	color: var(--gray-text-body);
+	border-radius: 10px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.link-box:hover {
+	color: var(--primary-p-60);
+}
+.link-list-img img {
+	width: 35px;
+}
+.link-list-img {
+	padding: 10px;
+	border-radius: 100%;
+}
+.link-list-img.img1{
+	background-color: #DF8562;
+}
+.link-list-img.img2{
+	background-color: #D87E81;
+}
+.link-list-img.img3{
+	background-color: #87CA98;
+}
+.link-list-img.img4{
+	background-color: #829ACA;
+}
+.link-list-img.img5{
+	background-color: #9684E6;
+}
+.link-list-img.img6{
+	background-color: #F4AE50;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="subject">
+<!-- 과목 리스트 조회하기 -->
+	<sql id="dynamicMajor">
+		<if test="major_id > 0">
+			and b.major_id = #{major_id}
+		</if>
+	</sql>
+	<sql id="dynamicCol">
+		<if test="col_id > 0">
+			and b.col_id = #{col_id}
+		</if>
+	</sql>
+	<sql id="dynamicCredit">
+		<if test="subject_credit > 0">
+			and a.subject_credit=#{subject_credit}
+		</if>
+	</sql>
+	<sql id="dynamicGrade">
+		<if test="subject_grade > 0">
+			and a.subject_grade=#{subject_grade}
+		</if>
+	</sql>
+	<sql id="dynamicType">
+		<if test="subject_type != null and subject_type != ''">
+			and a.subject_type=#{subject_type}
+		</if>
+	</sql>
+	<sql id="dynamicTerm">
+		<if test="subject_term != null and subject_term != ''">
+			and a.subject_term = #{subject_term}
+		</if>
+	</sql>
+	<sql id="dynamicName">
+		<if test="subject_name != null and subject_name != ''">
+			and a.subject_name like '%'||#{subject_name}||'%'
+		</if>
+	</sql>
+
+	<select id="subjectList" parameterType="subVo"
+		resultType="subVo">
+		select subject_type, subject_id, subject_term, subject_name, subject_grade, subject_credit, major_id, major_name from (   
+		select a.subject_type, a.subject_term, a.subject_id, subject_name, subject_grade, subject_credit, a.major_id, b.major_name, ROWNUM rs   
+		from subject a, major b
+		where a.major_id=b.major_id
+		<include refid="dynamicType" />
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicGrade" />
+		<include refid="dynamicCredit" />
+		<include refid="dynamicName" />
+		<include refid="dynamicTerm" />
+		 <![CDATA[) where rs between #{start} and #{end} 
+		  ]]>
+	</select>
+	
+	<select id="subjectListCount" parameterType="subVo"
+		resultType="int">
+		select count(*) 
+		from subject a, major b
+		where a.major_id=b.major_id
+		<include refid="dynamicType" />
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicGrade" />
+		<include refid="dynamicCredit" />
+		<include refid="dynamicName" />
+		<include refid="dynamicTerm" />
+	</select>
+	
+	<select id="subjectDetail" parameterType="String" resultType="subVo">
+		select *
+		from subject a
+		left outer join major b on a.major_id=b.major_id
+		left outer join colleage c on b.col_id=c.col_id
+		where a.subject_id=#{subject_id}
+	</select>
+	
+	<update id="updateSubject" parameterType="subVo">
+		update subject set 
+		subject_name=#{subject_name},
+		subject_type=#{subject_type},
+		subject_term=#{subject_term},
+		subject_grade=#{subject_grade},
+		subject_credit=#{subject_credit},
+		subject_theory=#{subject_theory},
+		subject_training=#{subject_training},
+		subject_outline=#{subject_outline},
+		subject_target=#{subject_target},
+		subject_t_book=#{subject_t_book},
+		subject_s_book=#{subject_s_book},
+		subject_r_file=#{subject_r_file},
+		subject_p_file=#{subject_p_file}
+		where subject_id=#{subject_id}
+	</update>
+	
+	<select id="createSubjectId" parameterType="subVo" resultType="String">
+		select subject_grade||substr(subject_term,1,1)||lpad(major_id,3,0)||'-'||lpad(max(to_number(substr(subject_id,7)))+1,3,0)
+        from subject
+        where subject_grade=#{subject_grade}
+        and subject_term=#{subject_term}
+        and major_id=#{major_id}
+        group by subject_grade, subject_term,major_id
+	</select>
+	
+	<delete id="deleteSubject" parameterType="String">
+		delete from subject where subject_id = #{subject_id}
+	</delete>
+	
+	<select id="countLecture" parameterType="String" resultType="int">
+		select count(*)
+		from lecture
+		where subject_id=#{subject_id}
+	</select>
+	
+	<insert id="insertSubject" parameterType="subVo">
+		insert into subject
+		values(#{subject_id},#{major_id},#{subject_name},#{subject_credit},#{subject_term},#{subject_grade},#{subject_theory},#{subject_training},#{subject_type},#{subject_outline},#{subject_target},#{subject_t_book},#{subject_s_book},#{subject_r_file},#{subject_p_file})
+	</insert>
+</mapper>

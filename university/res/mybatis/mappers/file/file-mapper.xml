@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="file">
+	
+	<!-- file 등록 -->
+	<insert id="insertFile" parameterType="fileVo">
+		insert into attach_file(file_id, file_origin_name, file_save_name, file_path, file_size)
+		values((select nvl(max(file_id),0)+1 from attach_file), #{file_origin_name}, #{file_save_name}, #{file_path}, #{file_size})
+	</insert>
+	
+	<!-- file 삭제 -->
+	<delete id="deleteFile" parameterType="string">
+		delete from attach_file where file_save_name like '%'||#{mem_id}||'%'
+	</delete>
+	
+	<!-- 회원 이미지를 가져오기 -->
+	<select id="getUserImg" parameterType="string" resultType="fileVo">
+		select * from attach_file 
+		 where file_save_name like '%'||#{mem_id}||'%'
+	</select>
+	
+	
+	<select id="getFile" resultType="fileVo">
+	
+	
+	  select *
+	  from attach_file A, board_file B
+	  where A.file_id = B.file_id
+	  and A.file_id = #{File_id}
+	</select>
+	
+</mapper>

@@ -1,0 +1,53 @@
+package noticeBoard.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import noticeBoard.service.INoticeBoardService;
+import noticeBoard.service.NoticeBoardServiceImpl;
+import noticeBoard.vo.NoticeBoardVO;
+
+
+
+
+
+@WebServlet("/detail.do")
+public class detail extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+
+		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			System.out.println("��������");
+			
+			
+			int bnum = Integer.parseInt(request.getParameter("board_id"));
+
+			System.out.println(bnum);
+			INoticeBoardService service =NoticeBoardServiceImpl.getService();
+			
+			NoticeBoardVO vo=service.detailBoard(bnum);
+			
+			
+			request.setAttribute("content", vo.getBoard_content());
+			request.setAttribute("date", vo.getBoard_date());
+			request.setAttribute("file", vo.getBoard_file());
+			request.setAttribute("hit", vo.getBoard_hit());
+			request.setAttribute("Board_id", vo.getBoard_id());
+			request.setAttribute("title", vo.getBoard_title());
+			request.setAttribute("type", vo.getBoard_type());
+			request.setAttribute("Mem_id", vo.getMem_id());
+			
+			
+			request.getRequestDispatcher("/board/nt/view/detail.jsp").forward(request, response); 
+				}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+}

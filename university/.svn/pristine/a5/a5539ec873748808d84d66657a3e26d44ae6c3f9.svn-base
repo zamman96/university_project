@@ -1,0 +1,31 @@
+<%@page import="com.google.gson.JsonElement"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="jdk.nashorn.api.scripting.JSObject"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="board.vo.BoardVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+List<BoardVO> list=(List<BoardVO>)request.getAttribute("list");
+int sp=(Integer)request.getAttribute("startp");
+int ep=(Integer)request.getAttribute("endp");
+int tp=(Integer)request.getAttribute("totalp");
+
+JsonObject obj =new JsonObject();
+obj.addProperty("sp",sp);
+obj.addProperty("ep",ep);
+obj.addProperty("tp",tp);
+
+Gson gson=new Gson();
+
+JsonElement result=gson.toJsonTree(list);
+
+obj.add("datas", result);
+
+out.print(obj);
+out.flush(); 
+
+
+
+%>

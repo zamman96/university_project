@@ -1,0 +1,50 @@
+<%@page import="board.vo.BoardVO"%>
+<%@page import="com.google.gson.JsonElement"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+
+
+String bcon=(String)request.getAttribute("content");
+String bdata=(String)request.getAttribute("date");
+int bfile=(Integer)request.getAttribute("file");
+int bhit=(Integer)request.getAttribute("hit");
+int bid=(Integer)request.getAttribute("Board_id");
+String btitle=(String)request.getAttribute("title");
+String btype=(String)request.getAttribute("type");
+String mid=(String)request.getAttribute("Mem_id");
+
+String file_origin_name=(String)request.getAttribute("FOname");
+String file_save_name=(String)request.getAttribute("FSname");
+String file_path=(String)request.getAttribute("file_path");
+int file_id=(Integer)request.getAttribute("file_id");
+int file_size=(Integer)request.getAttribute("file_size");
+int file_image=(Integer)request.getAttribute("file_image");
+
+
+
+JsonObject obj =new JsonObject();
+obj.addProperty("bcon", bcon);
+obj.addProperty("bdata", bdata);
+obj.addProperty("bfile", bfile);
+obj.addProperty("bhit", bhit);
+obj.addProperty("bid", bid);
+obj.addProperty("btitle", btitle);
+obj.addProperty("btype", btype);
+obj.addProperty("mid", mid);
+
+obj.addProperty("file_origin_name", file_origin_name);
+obj.addProperty("file_save_name", file_save_name);
+obj.addProperty("file_path", file_path);
+obj.addProperty("file_id", file_id);
+obj.addProperty("file_size", file_size);
+obj.addProperty("file_image", file_image);
+
+Gson gson=new Gson();
+
+
+out.print(obj);
+out.flush(); 
+%>

@@ -1,0 +1,179 @@
+package noticeBoard.service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+import noticeBoard.dao.INoticeBoardDao;
+import noticeBoard.dao.NoticeBoardDaoImpl;
+import noticeBoard.vo.NoticeBoardVO;
+import noticeBoard.vo.NoticePageVO;
+
+public class NoticeBoardServiceImpl implements INoticeBoardService{
+
+	private INoticeBoardDao  dao;
+	
+	
+
+	//private static INoticeBoardService noticeService =new NoticeBoardServiceImpl();
+
+	private NoticeBoardServiceImpl() {
+		dao = NoticeBoardDaoImpl.getDao();
+	}
+	
+	public static INoticeBoardService service; 
+	public static INoticeBoardService getService() {
+		if(service == null)  service = new NoticeBoardServiceImpl();
+		
+		return service;
+		
+
+
+	}
+	
+	
+	@Override
+	public int boardCnt(NoticeBoardVO noticeBoardVO) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+
+//
+//	@Override
+//	public List<NoticeBoardVO> selectNotice() {
+//		// TODO Auto-generated method stub
+//		return dao.selectNotice();
+//	}
+
+	@Override
+	public int insertBoard(NoticeBoardVO vo) {
+		
+		return dao.insertBoard(vo);
+	}
+
+	@Override
+	public NoticePageVO pageInfo(int page, String stype, String sword) {
+		//전체글갯수 구하기
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("stype", stype);
+				map.put("sword", sword);
+				
+				int count=this.getTotalCount(map);
+				System.out.println(count);
+				//전체 페이지수구하기
+				int perpage =NoticePageVO.getPerPage();//5
+				int perlist=NoticePageVO.getPerList();//8
+				int totalpage=(int)Math.ceil((double)count/perlist);//26/8
+				
+				//스타트 앤드 구하기
+				int start=(page-1)*perlist+1;//page기본값 1
+				int end=start+perlist-1;//page기본값 1이면 +5하고-1해서 1 2 3 4 5 
+				if(end>count) {
+					end=count;
+				}
+				
+				//시작페이지 끝페이지 구하기
+				int startpage=((page-1)/perpage*perpage)+1;
+				int endpage=startpage+perpage-1;
+				if(endpage>totalpage)endpage=totalpage;
+				
+				NoticePageVO pvo=new NoticePageVO();
+				pvo.setStart(start);
+				pvo.setEnd(end);
+				pvo.setStartPage(startpage);
+				pvo.setEndPage(endpage);
+				pvo.setTotalPage(totalpage);
+				
+				System.out.println("start==>"+start);
+				System.out.println("end==>"+end);
+				System.out.println("startpage==>"+startpage);
+				System.out.println("endpage==>"+endpage);
+				System.out.println("totalpage==>"+totalpage);
+				return pvo;
+	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public int updateBoard(NoticeBoardVO vo) {
+		// TODO Auto-generated method stub
+		return dao.updateBoard(vo);
+	}
+
+	@Override
+	public int deleteBoard(int num) {
+		// TODO Auto-generated method stub
+		return  dao.deleteBoard(num);
+	}
+
+
+
+
+
+
+	@Override
+	public List<NoticeBoardVO> selectNotice(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.selectNotice(map);
+	}
+
+
+
+	
+
+
+	@Override
+	public int getTotalCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.getTotalCount(map);
+	}
+
+
+
+
+
+	@Override
+	public List<NoticeBoardVO> selectqaBoard() {
+		// TODO Auto-generated method stub
+		return dao.selectqaBoard();
+	}
+	@Override
+	public List<NoticeBoardVO> NoticeBoard() {
+		// TODO Auto-generated method stub
+		return dao.NoticeBoard();
+	}
+
+
+	@Override
+	public int updateHit(int num) {
+		// TODO Auto-generated method stub
+		return dao.updateHit(num);
+	}
+
+
+	@Override
+	public NoticeBoardVO detailBoard(int num) {
+		// TODO Auto-generated method stub
+		return dao.detailBoard(num);
+	}
+
+
+
+
+
+
+
+
+
+	
+	
+	
+}

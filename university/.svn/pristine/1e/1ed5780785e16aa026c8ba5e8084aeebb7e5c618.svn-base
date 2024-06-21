@@ -1,0 +1,114 @@
+package notice.vo;
+
+public class NoticeVO {
+
+	private String board_type;
+	private int board_id;
+	private String mem_id;
+	private String board_title;
+	private String board_date;
+	private String board_content;
+	private int board_hit;
+	private int board_file;
+	private String mem_name;
+	private int file_id;
+	private String wip;
+	
+	
+
+
+	public String getWip() {
+		return wip;
+	}
+
+	public String getMem_name() {
+		return mem_name;
+	}
+
+	public void setMem_name(String mem_name) {
+		this.mem_name = mem_name;
+	}
+
+	public int getFile_id() {
+		return file_id;
+	}
+
+	public void setFile_id(int file_id) {
+		this.file_id = file_id;
+	}
+
+
+
+	public String getBoard_type() {
+		return board_type;
+	}
+
+	public void setBoard_type(String board_type) {
+		this.board_type = board_type;
+	}
+
+	public int getBoard_id() {
+		return board_id;
+	}
+
+	public void setBoard_id(int board_id) {
+		this.board_id = board_id;
+	}
+
+	public String getMem_id() {
+		return mem_id;
+	}
+
+	public void setMem_id(String mem_id) {
+		this.mem_id = mem_id;
+	}
+
+	public String getBoard_title() {
+		return board_title;
+	}
+
+	public void setBoard_title(String board_title) {
+		this.board_title = board_title;
+	}
+
+	public String getBoard_date() {
+		return board_date;
+	}
+
+	public void setBoard_date(String board_date) {
+		this.board_date = board_date;
+	}
+
+	public String getBoard_content() {
+		return board_content;
+	}
+
+	public void setBoard_content(String board_content) {
+		this.board_content = board_content;
+	}
+
+	public int getBoard_hit() {
+		return board_hit;
+	}
+
+	public void setBoard_hit(int board_hit) {
+		this.board_hit = board_hit;
+	}
+
+	public int getBoard_file() {
+		return board_file;
+	}
+
+	public void setBoard_file(int board_file) {
+		this.board_file = board_file;
+	}
+
+	public void setWip(String remoteAddr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+}

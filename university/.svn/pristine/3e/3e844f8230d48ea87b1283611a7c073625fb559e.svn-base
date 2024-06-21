@@ -1,0 +1,266 @@
+package noticeBoard.dao;
+
+
+import java.util.List;
+import java.util.Map;
+
+
+import org.apache.ibatis.session.SqlSession;
+
+import noticeBoard.vo.NoticeBoardVO;
+import util.MyBatisUtil;
+
+public class NoticeBoardDaoImpl implements INoticeBoardDao {
+	
+	private NoticeBoardDaoImpl() { }
+
+	private static INoticeBoardDao  dao;
+	
+
+	public static INoticeBoardDao  getDao() {
+		if(dao == null)  dao = new NoticeBoardDaoImpl();
+		
+		return dao;
+	}
+	
+	@Override
+	public int insertBoard(NoticeBoardVO vo) {
+		int result=0;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.insert("notice.insertBoard",vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				session.commit();
+				session.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int getTotalCount(Map<String, Object> map) {
+		int result=0;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.selectOne("notice.getTotalCount",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return result;
+	}
+
+
+	@Override
+	public List<NoticeBoardVO> selectqaBoard() {
+		List<NoticeBoardVO>list=null;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			list=session.selectList("notice.selectqaBoard");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		
+		return list;
+	}
+	
+	@Override
+	public List<NoticeBoardVO> NoticeBoard() {
+		List<NoticeBoardVO>list=null;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			list=session.selectList("notice.NoticeBoard");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		
+		return list;
+	}
+
+
+	@Override
+	public int deleteBoard(int num) {
+		int result=0;
+		
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.delete("notice.deleteBoard",num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return result;
+	}
+
+	@Override
+	public NoticeBoardVO detailBoard(int num) {
+		NoticeBoardVO vo=null;
+		SqlSession session=null;
+		
+		try {
+			session = MyBatisUtil.getSqlSession();
+			vo=session.selectOne("notice.detail", num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		
+		
+		return vo;
+	}
+
+	@Override
+	public int updateHit(int num) {
+		int result=0;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.update("notice.updateHit",num);
+		}  catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return result;
+	}
+
+	@Override
+	public int updateBoard(NoticeBoardVO vo) {
+		int result=0;
+		SqlSession session=null;
+		
+		try {
+			session=MyBatisUtil.getSqlSession();
+			result=session.update("notice.updateBoard",vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return result;
+	}
+
+
+
+	
+	
+//	@Override
+//	public int boardCnt(NoticeBoardVO noticeBoardVO) {
+//		SqlSession session = null;
+//		int cnt = 0;
+//		try {
+//			session=MyBatisUtil.getSqlSession();
+//			cnt = session.insert("notice.boardCnt", noticeBoardVO);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		} finally {
+//			session.commit();             
+//			session.close();
+//		}
+//		return cnt;
+//	}
+	
+	@Override
+	public List<NoticeBoardVO> selectNotice(Map<String, Object> map) {
+		List<NoticeBoardVO>list=null;
+		SqlSession session=null;
+		try {
+			session=MyBatisUtil.getSqlSession();
+			list=session.selectList("notice.selectNotice",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			session.commit();
+			session.close();
+		}
+		return list;
+	}
+
+//	@Override
+//	public List<NoticeBoardVO> selectNotice() {
+//		// TODO Auto-generated method stub
+//
+//		SqlSession  session = null; 
+//		List<NoticeBoardVO> list = null;
+//		
+//		try {
+//
+//			session = MyBatisUtil.getSqlSession();
+//			list = session.selectOne("board.select");
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}finally {
+//			
+//			session.close();
+//		}
+//
+//		return list;
+//	}
+
+
+
+
+//	@Override
+//	public int insert(NoticeBoardVO boardvo) {
+//		SqlSession session = null;
+//		
+//		int cnt = 0;
+//		
+//		try {
+//			session = MyBatisUtil.getSqlSession();
+//			
+//			cnt = session.insert("noticeboard.insert", boardvo);
+//			
+//			if(cnt > 0) {
+//				session.commit();
+//			}
+//			
+//		}catch(PersistenceException ex) {
+//			ex.printStackTrace();
+//		}finally {
+//			session.close();
+//		}
+//		
+//		return cnt;
+//		
+//	}
+//	
+	
+
+
+
+
+}
+

@@ -1,0 +1,79 @@
+package board.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import board.service.BoardServiceImpl;
+import board.service.IBoardService;
+import board.vo.BoardVO;
+import board.vo.PListVO;
+import board.vo.PageVO;
+
+
+@WebServlet("/BoardList.do")
+public class BoardList extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		 
+		 //전송데이터 읽기
+		 StringBuffer buf=new StringBuffer();
+		 String line=null;
+		 
+		 try {
+			BufferedReader reader=request.getReader();
+			while (true) {
+				line=reader.readLine();
+				if(line==null)break;
+				buf.append(line);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 
+		String reqdata=buf.toString();
+			//자바 객체로 역질렬화
+		Gson gson =new Gson();
+		 
+		PListVO vo=gson.fromJson(reqdata, PListVO.class);
+		
+		IBoardService service =BoardServiceImpl.getService();
+		
+		PageVO pvo =service.pageInfo(vo.getPage(), vo.getStype(), vo.getSword());
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("start", pvo.getStart());
+		map.put("end", pvo.getEnd());
+		map.put("stype", vo.getStype());
+		map.put("sword", vo.getSword());
+		
+		List<BoardVO> list=service.selectByPage(map);
+		
+		request.setAttribute("list", list);
+		request.setAttribute("startp", pvo.getStartPage());
+		request.setAttribute("endp", pvo.getEndPage());
+		request.setAttribute("totalp", pvo.getTotalPage());
+		
+		request.getRequestDispatcher("/board/qa/boardview/list.jsp").forward(request, response); 
+	}
+//	@Override
+//	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		// TODO Auto-generated method stub
+//		doPost(req, resp);
+//	}
+
+}

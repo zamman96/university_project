@@ -1,0 +1,75 @@
+package notice.controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import file.service.FileServiceImpl;
+import file.service.IFileService;
+import file.vo.FileVO;
+import notice.service.INoticeService;
+import notice.service.NoticeServiceImpl;
+import notice.vo.NoticeVO;
+
+
+
+/**
+ * Servlet implementation class NoticeDetail
+ */
+@WebServlet("/noticeDetail.do")
+public class NoticeDetail extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int board_id =  Integer.parseInt(request.getParameter("board_id"));
+		
+		INoticeService ntService = NoticeServiceImpl.getInstance();
+		
+
+				
+		NoticeVO nv = ntService.ntGet(board_id);
+		
+		request.setAttribute("content", nv.getBoard_content());
+		request.setAttribute("date", nv.getBoard_date());
+		request.setAttribute("file", nv.getBoard_file());
+		request.setAttribute("hit", nv.getBoard_hit());
+		request.setAttribute("Board_id", nv.getBoard_id());
+		request.setAttribute("title", nv.getBoard_title());
+		request.setAttribute("type", nv.getBoard_type());
+		request.setAttribute("Mem_id", nv.getMem_id());
+		
+		//파일처리
+		
+		int result = ntService.ntHit(board_id);
+		
+		System.out.println("result : " + result);
+		
+		long FileId = nv.getBoard_file();
+		
+		if(FileId > 0) {
+			IFileService fileService = 
+					FileServiceImpl.getInstance();
+			
+			FileVO FileVO = new FileVO();
+			FileVO.setFile_id(result); //확인필요
+			FileVO = fileService.getFile(FileVO);
+			
+			request.setAttribute("FileVO", FileVO);
+		}
+		
+//		request.setAttribute("nv", nv);
+		
+		
+		
+		request.getRequestDispatcher("/board/notice/view/detail.jsp").forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+}

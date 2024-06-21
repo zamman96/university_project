@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+:root {
+	/* fonts */
+	--font-pretendard: Pretendard;
+	
+	/* font sizes */
+	--font-size-logo: 30px;
+	
+	--font-size-sm: 14px;
+	--font-size-base: 16px;
+	--font-size-lg: 18px;
+	--font-size-xl: 20px;
+	--font-size-2xl: 24px;
+	--font-size-3xl: 26px;
+	--font-size-4xl: 30px;
+	
+	/* Colors */
+	--white: #fff;
+	--color-black: #000;
+	--color-darkseagreen-100: #6ab686;
+	--bg-0: #eff0f5;
+	--bg-1: #f0f1fe;
+	--gray-bg-5: #d9d9d9;
+	--primary-p-5: #eff5ff;
+	--primary-p-40: #5089ef;
+	--primary-p-50: #246BEB;
+	--primary-p-60: #1D56BC;
+	--primary-p-70: #16408D;
+	--primary-p-80: #0e2b5e;
+	--primary-p-90: #07152f;
+	--gray-line-box: #e4e4e4;
+	--gray-line-dark: #07152f;
+	--gray-text-title: #1d1d1d;
+	--gray-text-body: #555;
+	--gray-text-disabled: #8e8e8e;
+	
+	/* Border Colors */
+	--table-th: #8E8E8E;
+	--table-td: #E4E4E4;
+	
+	/* lecture Colors */
+	--lecture-1-fill: #CCE2F4;
+	--lecture-1-border: #6CBFEF;
+	--lecture-2-fill: #EFE0D2;
+	--lecture-2-border: #F4AE50;
+	--lecture-3-fill: #DAD7F3;
+	--lecture-3-border: #745BDE;
+	--lecture-4-fill: #EED2CA;
+	--lecture-4-border: #F06633;
+	--lecture-5-fill: #CFD6F6;
+	--lecture-5-border: #415DE8;
+	--lecture-6-fill: #EDCED4;
+	--lecture-6-border: #EC6A6E;
+	--lecture-7-fill: #C9E5D9;
+	--lecture-7-border: #4DC170;
+	--lecture-8-fill: #C9E9E9;
+	--lecture-8-border: #5BD3C0;
+	--lecture-9-fill: #EEEACA;
+	--lecture-9-border: #DCB900;
+	--lecture-10-fill: #E1EFE0;
+	--lecture-10-border: #3CB432;
+	
+	/* Gaps */
+	--gap-layout-1: 20px;
+	--gap-layout-2: 40px;
+	
+	--gap-base: 10px;
+	--gap-xl: 20px;
+	--gap-11xl: 30px;
+	--gap-21xl: 40px;
+	
+	/* Paddings */
+	--pd-side-item-x : 15px;
+	--pd-side-item-y : 16px;
+	--pd-select-x: 15px;
+	--pd-select-y: 10px;
+	--pd-box:40px;
+	--pd-table: 20px;
+	
+	--padding-2xs: 10px;
+	--padding-xs: 15px;
+	--padding-m: 15px;
+	--padding-xl: 20px;
+	--padding-2xl: 40px;
+	
+	/* Border radiuses */
+	--br-side-item: 5px;
+	--br-sel: 2px;
+	--br-logo: 8px;
+	
+	--br-2xs: 5px;	
+	--br-xs: 10px;
+	--br-m: 15px;
+	--br-xl: 20px;
+	
+	--br-11xs: 2px;
+	--br-3xs: 10px;
+	--br-81xl: 100px;
+	
+	
+	/* Effects */
+	  --shadow: drop-shadow(0 10px 4px #bbb);
+	  --filter-p-50: invert(36%) sepia(83%) saturate(1069%) hue-rotate(192deg) brightness(93%) contrast(99%);
+}

@@ -1,0 +1,43 @@
+package board.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import board.vo.BoardVO;
+import board.vo.ReplyVO;
+
+public interface IBoardDao {
+
+	public List<BoardVO> selectByPage(Map<String, Object> map);
+	
+	public int updateBoard(BoardVO vo);
+	//글쓰기
+	public int  insertBoard(BoardVO vo);
+	
+	//글삭제
+	public int deleteBoard(int num);
+	
+	public int getTotalCount(Map<String, Object> map);
+	
+	// 240615 정기쁨 추가 시작
+	/**
+	 * 메인의 공지사항 및 문의 게시판에 타이틀과 조회수를 출력하는 메서드
+	 * @return
+	 */
+	public List<BoardVO> selectNotiBoard();
+	public List<BoardVO> selectQuestBoard();
+	
+	// 240615 정기쁨 추가 끝	
+	
+	//240615신지시작
+	public BoardVO detailBoard (int num);
+	
+	public int updateHit(int num);
+	
+	public int insertBoardFile();
+	
+	public BoardVO fileDownload(Map<String, Object> map);
+	
+	public int insertReply(ReplyVO vo);
+	
+}

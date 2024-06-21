@@ -1,0 +1,31 @@
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="com.google.gson.Gson"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+    <%
+    String ntcon=(String)request.getAttribute("content");
+    String ntdate=(String)request.getAttribute("date");
+    int ntfile=(Integer)request.getAttribute("file");
+    int nthit=(Integer)request.getAttribute("hit");
+    int ntid=(Integer)request.getAttribute("Board_id");
+    String nttitle=(String)request.getAttribute("title");
+    String nttype=(String)request.getAttribute("type");
+    String ntmid=(String)request.getAttribute("Mem_id");
+
+    JsonObject obj =new JsonObject();
+    obj.addProperty("ntcon", ntcon);
+    obj.addProperty("ntdate", ntdate);
+    obj.addProperty("ntfile", ntfile);
+    obj.addProperty("nthit", nthit);
+    obj.addProperty("ntid", ntid);
+    obj.addProperty("nttitle", nttitle);
+    obj.addProperty("nttype", nttype );
+    obj.addProperty("ntmid",ntmid );
+
+    Gson gson=new Gson();
+    
+    
+    out.print(obj);
+    out.flush(); 
+    %>

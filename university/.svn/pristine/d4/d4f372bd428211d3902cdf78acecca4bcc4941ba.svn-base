@@ -1,0 +1,5 @@
+package noticeBoard.vo;
+
+public class NoticeInsertVO {
+
+}

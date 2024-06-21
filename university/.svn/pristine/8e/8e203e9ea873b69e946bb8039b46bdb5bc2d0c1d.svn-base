@@ -1,0 +1,68 @@
+package board.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import board.service.BoardServiceImpl;
+import board.service.IBoardService;
+import board.vo.BoardVO;
+
+
+@WebServlet("/DetailBoard.do")
+public class DetailBoard extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	    
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		
+		int bnum = Integer.parseInt(request.getParameter("board_id"));
+
+		
+		IBoardService service =BoardServiceImpl.getService();
+		
+		BoardVO vo=service.detailBoard(bnum);
+		
+		
+		request.setAttribute("content", vo.getBoard_content());
+		request.setAttribute("date", vo.getBoard_date());
+		request.setAttribute("file", vo.getBoard_file());
+		request.setAttribute("hit", vo.getBoard_hit());
+		request.setAttribute("Board_id", vo.getBoard_id());
+		request.setAttribute("title", vo.getBoard_title());
+		request.setAttribute("type", vo.getBoard_type());
+		request.setAttribute("Mem_id", vo.getMem_id());
+		
+		request.setAttribute("file_id", vo.getFile_id());
+		request.setAttribute("FOname", vo.getFile_origin_name());
+		request.setAttribute("FSname", vo.getFile_save_name());
+		request.setAttribute("file_path", vo.getFile_path());
+		request.setAttribute("file_size", vo.getFile_size());
+		request.setAttribute("file_image", vo.getFile_image());
+		
+		
+		request.setAttribute("mem_name", vo.getMem_name());
+		request.setAttribute("reply_content", vo.getReply_content());
+		request.setAttribute("reply_date", vo.getReply_date());
+		
+		request.getRequestDispatcher("/board/qa/boardview/detail.jsp").forward(request, response); 
+		
+	}
+
+}

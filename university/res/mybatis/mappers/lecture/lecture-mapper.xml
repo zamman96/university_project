@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다 -->
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="lecture">
+<!-- 강의 개설에서 사용하는 sql -->
+<!-- 과목 리스트 조회하기 -->
+	<sql id="dynamicMajor">
+		<if test="major_id > 0">
+			and b.major_id = #{major_id}
+		</if>
+	</sql>
+	<sql id="dynamicCol">
+		<if test="col_id > 0">
+			and b.col_id = #{col_id}
+		</if>
+	</sql>
+	<sql id="dynamicCredit">
+		<if test="subject_credit > 0">
+			and a.subject_credit=#{subject_credit}
+		</if>
+	</sql>
+	<sql id="dynamicGrade">
+		<if test="subject_grade > 0">
+			and a.subject_grade=#{subject_grade}
+		</if>
+	</sql>
+	<sql id="dynamicType">
+		<if test="subject_type != null and subject_type != ''">
+			and a.subject_type=#{subject_type}
+		</if>
+	</sql>
+
+	<select id="subjectList" parameterType="lecVo"
+		resultType="subVo">
+		select subject_type, subject_id, subject_name, subject_grade, subject_credit, major_id, major_name from (   
+select a.subject_type, a.subject_id, subject_name, subject_grade, subject_credit, a.major_id, b.major_name, ROWNUM rs   
+		from subject a, major b
+		where a.major_id=b.major_id
+		and a.subject_term=#{subject_term}
+		and a.subject_id not in (select subject_id
+from lecture
+where year=#{year}
+and term=#{subject_term})
+		<include refid="dynamicType" />
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicGrade" />
+		<include refid="dynamicCredit" />
+		<include refid="dynamicName" />
+		  <![CDATA[) where rs between #{start} and #{end} 
+		  ]]>
+	</select>
+	
+	<select id="subjectListCount" parameterType="lecVo" resultType="int">
+		select count(*)
+		from subject a, major b
+		where a.major_id=b.major_id
+		and a.subject_term=#{subject_term}
+		and a.subject_id not in (select subject_id
+from lecture
+where year=#{year}
+and term=#{subject_term})
+		<include refid="dynamicType" />
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicGrade" />
+		<include refid="dynamicCredit" />
+		<include refid="dynamicName" />
+	</select>
+<!-- 과목 리스트 조회하기 end -->
+	
+<!-- 해당 학과에 속하는 교수 명단 -->
+	<select id="professorList" parameterType="int" resultType="proVo">
+		select *
+		from member a, professor b, major c
+		where a.mem_id=b.pro_id
+		and b.major_id=c.major_id
+		and b.major_id=#{major_id}
+	</select>
+	
+<!-- 이용가능한 건물 리스트 영어 앞, 숫자 순으로 정렬-->
+	<select id="building" resultType="roomVo">
+		select distinct room_id
+		from lec_room
+		where room_available = 1
+		order by substr(room_id,1,1), to_number(substr(room_id,2,2))
+	</select>
+	
+<!-- 위에서 선택한 건물 번호를 받아서 그 건물에 속하는 이용가능한 호수 찾기 -->
+	<select id="roomnum" resultType="roomVo" parameterType="String">
+		select room_id, room_num
+		from lec_room
+		where room_available=1
+		and room_id=#{room_id}
+		order by room_num
+	</select>
+	
+	
+<!-- 시간 조회하기 학과마다 조건을 달고 해당 시간에 강의실을 사용하거나 그 시간에 교수가 불가능한경우 시간이 조회되지 않음 -->
+	<sql id="dynamicCredit1">
+		<if test="subject_credit == 1">
+        substr(time_id,1,1)='A'
+    	</if>
+	</sql>
+	<sql id="dynamicCredit2">
+    <if test="subject_credit == 2">
+        substr(time_id,1,1)='B'
+    </if>
+	</sql>
+	<sql id="dynamicCredit3">
+    <if test="subject_credit == 3">
+        substr(time_id,1,1)='C'
+    </if>
+	</sql>
+	<sql id="dynamicCredit4">
+    <if test="subject_credit == 4">
+        substr(time_id,1,1)='D'
+    </if>
+	</sql>
+	<select id="timeList" parameterType="lecVo" resultType="timeVo">
+	select *
+    from time
+    where 
+    <include refid="dynamicCredit1" />
+    <include refid="dynamicCredit2" />
+    <include refid="dynamicCredit3" />
+    <include refid="dynamicCredit4" />
+	
+    and time_id not in (
+        select time_id
+        from time
+        where time_week||time_class in(select concat(time_week, time_class)
+                                       from lec_time
+                                       where room_id=#{room_id}
+                                       and room_num=#{room_num})
+        or time_week||time_class in(select concat(a.time_week, a.time_class)
+                                     from lec_time a, lecture b
+                                     where a.year=b.year
+                                     and a.term=b.term
+                                     and a.subject_id=b.subject_id
+                                     and b.pro_id=#{pro_id}))
+     order by to_number(substr(time_id,2)), time_week desc
+            
+	</select>
+<!-- 시간 조회하기 end-->
+
+	<!-- 시간번호로 나머지 정보 가져오는 sql -->
+	<select id="timeStr" parameterType="String" resultType="timeVo">
+		select *
+		from time
+		where time_id=#{time_id}
+	</select>
+
+	<!-- 강의 개설 (lec_time 테이블) insert -->
+	<insert id="lectureTimeInsert" parameterType="lecVo">
+		insert into lec_time
+		select #{year}, #{term}, #{subject_id}, #{room_id},#{room_num}, time_id, time_week, time_class
+		from time
+		where time_id=#{time_id}
+	</insert>
+
+<!-- 강의 개설 (lecture 테이블) insert -->
+	<insert id="lectureInsert" parameterType="lecVo">
+		insert into lecture
+		values(#{year}, #{term}, #{subject_id}, #{pro_id}, #{lec_count})
+	</insert>
+
+	
+<!--  개설된 강의 조회 -->
+	<sql id="dynamicTerm">
+		<if test="subject_term != null and subject_term != ''">
+			and a.subject_term = #{subject_term}
+		</if>
+	</sql>
+	<sql id="dynamicName">
+		<if test="subject_name != null and subject_name != ''">
+			and a.subject_name like '%'||#{subject_name}||'%'
+		</if>
+	</sql>
+	<sql id="dynamicYear">
+		<if test="year != null and year != ''">
+			and c.year = #{year}
+		</if>
+	</sql>
+
+
+	<select id="lectureList" resultType="lecVo" parameterType="lecVo">
+		select distinct subject_type, subject_id, subject_name, subject_grade, subject_credit, major_id, major_name, year, term, mem_name, time_id, room_id, room_num, lec_count from (   
+			select a.subject_type, a.subject_id, subject_name, subject_grade, subject_credit, a.major_id, b.major_name, c.lec_count, c.year, c.term, e.mem_name, d.time_id, d.room_id, d.room_num, ROWNUM rs  
+			from subject a, major b, lecture c, member e, (select distinct time_id, subject_id, year, term, room_id, room_num from lec_time) d
+			where a.major_id=b.major_id
+			and a.subject_id=c.subject_id
+			and c.subject_id=d.subject_id
+			and c.year=d.year
+			and c.term=d.term
+			and c.pro_id=e.mem_id
+			<include refid="dynamicType" />
+			<include refid="dynamicMajor" />
+			<include refid="dynamicCol" />
+			<include refid="dynamicGrade" />
+			<include refid="dynamicCredit" />
+			<include refid="dynamicName" />
+			<include refid="dynamicTerm" />
+			<include refid="dynamicYear" />
+		 <![CDATA[) where rs between #{start} and #{end} 
+		  ]]>
+	</select>
+	
+	<!-- 페이징 처리를 위한 전체 count -->
+	<select id="lectureListCount" resultType="int" parameterType="lecVo">
+		select count(*)
+		from subject a, major b, lecture c, member e
+		where a.major_id=b.major_id
+		and a.subject_id=c.subject_id
+		and c.pro_id=e.mem_id
+		<include refid="dynamicType" />
+		<include refid="dynamicMajor" />
+		<include refid="dynamicCol" />
+		<include refid="dynamicGrade" />
+		<include refid="dynamicCredit" />
+		<include refid="dynamicName" />
+		<include refid="dynamicTerm" />
+		<include refid="dynamicYear" />
+	</select>
+	
+	<!-- 교수나 수강 가능인원 조정  강의실과 시간은 변경 불가능!!!!-->
+	<!-- 수강인원수 찾는 메서드를 통해 줄이는 것이 가능한지 체크 -->
+	<update id="updateLec" parameterType="lecVo">
+		update lecture
+		set pro_id=#{pro_id},
+		lec_count=#{lec_count}
+		where year=#{year}
+		and term=#{term}
+		and subject_id=#{subject_id}		
+	</update>
+	
+	<!-- 교수의 수업 시간겹치지 않는 조건 -->
+	<select id="proUpdateList" parameterType="lecVo" resultType="memVo">
+		select *
+		from member a, professor b, major c
+		where a.mem_id=b.pro_id
+		and b.major_id=c.major_id
+		and pro_id not in (
+			select c.pro_id
+			from lecture c, lec_time d
+			where c.year=d.year
+			and c.term=d.term
+			and c.subject_id=d.subject_id
+			and c.year=#{year}
+			and c.term=#{term}
+			and d.time_week||d.time_class in(
+				select time_week||time_class
+				from lec_time
+				where time_id=#{time_id}
+				and year=#{year}
+				and term=#{term}
+				)
+			)
+		and b.major_id=#{major_id}
+	</select>
+	
+	<delete id="deleteLec" parameterType="lecVo">
+		delete from lecture where year=#{year} and term=#{term} and subject_id=#{subject_id}
+	</delete>
+	
+	<delete id="deleteLecTime" parameterType="lecVo">
+		delete from lec_time where year=#{year} and term=#{term} and subject_id=#{subject_id}
+	</delete>
+	
+	<select id="detailLecture" resultType="lecVo" parameterType="lecVo">
+			select a.subject_type, a.subject_outline, a.subject_theory, a.subject_training, a.subject_target, a.subject_t_book, a.subject_s_book, a.subject_r_file, a.subject_p_file, a.subject_id, subject_name, subject_grade, subject_credit, a.major_id, b.major_name, c.lec_count, c.year, c.term, e.mem_name, c.pro_id, d.time_id, d.room_id, d.room_num, ROWNUM rs  
+			from subject a, major b, lecture c, member e, (select distinct time_id, subject_id, year, term, room_id, room_num from lec_time) d
+			where a.major_id=b.major_id
+			and a.subject_id=c.subject_id
+			and c.subject_id=d.subject_id
+			and c.year=d.year
+			and c.term=d.term
+			and c.pro_id=e.mem_id
+			and c.year=#{year}
+			and c.term=#{term}
+			and c.subject_id=#{subject_id}
+	</select>
+	
+	<!-- 교수가 수강하는 과목 리스트 -->
+	<select id="professorLectureList" parameterType="lecVo" resultType="lecVo">
+		select distinct a.year, a.term, a.subject_id, a.pro_id, 
+        a.lec_count, b.time_id, c.subject_name, b.room_id, 
+        b.room_num, c.subject_type, d.mem_name
+		from lecture a, lec_time b, subject c, member d
+        where a.year=b.year
+        and a.term=b.term
+        and a.subject_id=b.subject_id
+        and a.subject_id=c.subject_id
+        and a.pro_id=d.mem_id
+        and a.year=#{year}
+        and a.term=#{term}
+        and a.pro_id=#{pro_id}
+	</select>
+	
+</mapper>

@@ -1,0 +1,171 @@
+@charset "UTF-8";
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+}
+
+/* section-center 시작 */
+.section-center {	
+    background-color: white;
+    border: 1px solid var(--gray-line-box);
+    padding: 30px 30px;
+    border-radius: var(--br-xl);
+    min-width: 900px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    min-height: 830px;
+}
+
+/* 리스트 시작 */
+.list-title {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.list-title.top {
+	display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#rmenu {
+	padding: 4px 8px;
+    background: #f58d39;
+    font-weight: bold;
+    color: white;
+    border: none;
+}
+#rmenu:hover {
+    background: #f1842d;
+}
+.list-title.bottom {
+	display: flex;
+	width: 100%;
+    align-items: center;
+    gap: 15px;
+}
+.number {
+	font-size: 18px;
+	font-weight: 400;
+}
+#credit {
+	color: #f58d39;
+    font-weight: bold;
+}
+
+/* 개강 강의 리스트 검색 영역 시작 */
+.select-boxs {
+	display: flex;
+	align-items: flex-end;
+    margin-bottom: 8px;
+    justify-content: space-between;
+}
+.select-boxs-left {
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+}
+.sel-box {
+	padding: 5px 5px;
+}
+.sel-box select {
+	border: none;
+	outline: none;
+}
+.sel-zip {
+	display: flx
+}
+.search-box {
+	display: flex;
+    padding: 8px 15px;
+    border-radius: 100px;
+    border: 1px solid var(--gray-line-box);
+}
+.search-input {
+	border: none;
+	outline: none;
+	font-size: 16px;
+    padding: 0 10px 0 0;
+    width: 205px;
+}
+.search-btn {
+	cursor: pointer;
+    width: 20px;
+}
+.search-btn:hover {
+	filter: var(--filter-p-50);
+}
+
+/* 테이블 시작 */
+.table-wrap {
+	width: 100%; 
+}
+.table-wrap table {
+	white-space: nowrap;
+	width: 100%;
+}
+.table-wrap th, td {
+	height: 50px;
+	padding: 0 var(--pd-table);
+}
+.table-wrap th {
+	background: var(--primary-p-5);
+	text-align: center;
+}
+.table-wrap td {
+	border-top: 1px solid var(--table-td);
+	border-bottom: 1px solid var(--table-td);
+}
+thead tr {
+	position: sticky;
+	top: -1px;
+	background-color: #f9f9f9;
+	z-index: 1; /* Make sure the header stays on top */
+}
+#lectureList, #courseList{
+    max-height: 321px;
+	overflow: auto;    
+	border-top: 1px solid var(--gray-line-dark);
+}
+.deleteCourse, .insertCourse, .disableCourse {
+	padding: 8px 16px;
+    background-color: white;
+    border: none;
+}
+.deleteCourse:hover, .insertCourse:hover {
+    background-color: #fff6da;
+    border: none;
+    border-radius: 100px;
+    font-weight: 600;
+}
+.disableCourse:hover {
+	cursor: no-drop;
+}
+
+/* 스크롤 */
+#lectureList::-webkit-scrollbar,
+#courseList::-webkit-scrollbar {
+	height: 20px;
+	width: 20px;
+}
+#lectureList::-webkit-scrollbar-thumb,
+#courseList::-webkit-scrollbar-thumb {
+	background-color: var(--gray-bg-5);
+	border-radius: 100px;
+    background-clip: padding-box;
+    border: 8px solid transparent;
+}
+#lectureList::-webkit-scrollbar-track,
+#courseList::-webkit-scrollbar-track {
+    background-color: #fcfdff;
+    /* background-color: #fcfeff; */
+}

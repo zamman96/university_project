@@ -1,0 +1,143 @@
+<%@page import="com.google.gson.Gson"%>
+<%@page import="member.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>학적프로그램</title>
+<link rel="shortcut icon" href="http://localhost/university/global/img/favicon.png">
+<link rel="stylesheet"
+	href="http://localhost/university/global/global.css" />
+<link rel="stylesheet"
+	href="http://localhost/university/global/reset.css" />
+<link rel="stylesheet"
+	href="http://localhost/university/layout/common.css" />
+<link rel="stylesheet"
+	href="http://localhost/university/professor/css/attendance.css" />
+<link rel="stylesheet"
+	href="http://localhost/university/student/css/course_registration.css" />
+<link rel="stylesheet" as="style" crossorigin
+	href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link rel="shortcut icon"
+	href="http://localhost/university/global/img/favicon.png">
+<script src="http://localhost/university/global/js/jquery-3.7.1.js"></script>
+<script src="http://localhost/university/global/js/col_major.js"></script>
+<script
+	src="http://localhost/university/global/js/jquery.serializejson.min.js"></script>
+<script src="http://localhost/university/professor/js/courseStuList.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<%
+	String subject_id = request.getParameter("subject_id");
+	String subject_name = request.getParameter("subject_name");
+	String year = request.getParameter("year");
+	String term = request.getParameter("term");
+	
+	MemberVO memVo = (MemberVO)session.getAttribute("login");
+	
+	Gson gson = new Gson();
+	String json = gson.toJson(memVo);
+	String mem_id = memVo.getMem_id();
+%>
+<script>
+path = '<%=request.getContextPath()%>';
+	pro_id = '<%=mem_id%>';
+	year = '<%=year%>';
+	term = '<%=term%>';
+	subject_id = '<%=subject_id%>';
+	subject_name = '<%=subject_name%>';
+
+	avo = {
+		pro_id : pro_id,
+		year : year,
+		term : term,
+		subject_id : subject_id
+	}
+$(function(){
+	$('#subjectName').text(subject_name);
+	$('#yearInfo').text(year);
+	$('#termInfo').text(term);
+	$('#subjectNo').text(subject_id);
+	stuList();
+})
+</script>
+</head>
+<body>
+	<!-- container 시작 -->
+	<div id="container">
+
+		<!-- container-left 시작 -->
+		<div id="container-left">
+
+			<!-- side-menu 시작 -->
+						<jsp:include page="/layout/side-menu/side-menu.jsp" />
+			<!-- side-menu 끝 -->
+
+		</div>
+		<!-- container-left 끝 -->
+
+		<!-- container-right 시작 -->
+		<div id="container-right">
+
+			<!-- header 시작 -->
+					<jsp:include page="/layout/header/header.jsp"/>
+			<!-- header 끝 -->
+
+			<!-- section 시작 -->
+			<section>
+
+				<!-- section-content 시작 -->
+				<div class="section-content">
+
+					<!-- section-top 시작 -->
+					<div class="section-top">
+						학생 조회
+					</div>
+					<!-- section-top 끝 -->
+
+					<!-- section-center 시작 -->
+					<div class="section-center">
+						<div class="section-list">
+							<div class="table-wrap">
+								<div class="sel2-boxs">
+									<div class="modal1-wrap-title">과목 정보</div>
+									<div class="sel-box-inline">
+										<div class="sel2-box">
+							        		<div class="sel2-box-title">년도</div>
+							        		<div class="sel2-box-result" id="yearInfo"></div>
+							        	</div> 
+										<div class="sel2-box">
+							        		<div class="sel2-box-title">학기</div>
+							        		<div class="sel2-box-result" id="termInfo"></div>
+							        	</div> 
+										<div class="sel2-box">
+							        		<div class="sel2-box-title">과목번호</div>
+							        		<div class="sel2-box-result" id="subjectNo"></div>
+							        	</div> 
+										<div class="sel2-box">
+							        		<div class="sel2-box-title">과목이름</div>
+							        		<div class="sel2-box-result" id="subjectName"></div>
+					        			</div> 
+					        		</div> 
+				        		</div> 
+							</div>
+
+							<div id="stuList"></div>
+						</div>
+					</div>
+					<!-- section-center 끝 -->
+				</div>
+				<!-- section-content 끝 -->
+
+			</section>
+			<!-- section 끝 -->
+
+		</div>
+		<!-- container-right 끝 -->
+
+	</div>
+	<!-- container 끝 -->
+
+</body>
+</html>

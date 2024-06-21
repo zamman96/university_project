@@ -1,0 +1,30 @@
+package notice.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import notice.vo.NoticeVO;
+
+public interface INoticeDao {
+
+	public List<NoticeVO> ntList(Map<String, Object> map);
+
+	public NoticeVO ntGet(int board_id);
+	
+	public int ntInsert(NoticeVO nv);
+	
+	public int ntUpdate(NoticeVO nv);
+	
+	public int ntDelete(int board_id);
+	
+	public int ntHit(int board_id);
+	
+	public List<NoticeVO> ntSearch(Map<String, Object> map);
+	
+//	public int countList();
+//	
+//	public int countList2(String ntTit);
+
+	public int getTotalCount(Map<String, Object> map);
+
+}

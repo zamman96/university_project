@@ -1,0 +1,42 @@
+package board.controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import board.service.BoardServiceImpl;
+import board.service.IBoardService;
+
+/**
+ * Servlet implementation class UpdateHit
+ */
+@WebServlet("/UpdateHit.do")
+public class UpdateHit extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+
+    public UpdateHit() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int bnum = Integer.parseInt(request.getParameter("board_id"));
+		
+		System.out.println(bnum);
+		
+		IBoardService service =BoardServiceImpl.getService();
+		
+		int result = service.updateHit(bnum);
+		
+		request.setAttribute("result", result);
+		
+		request.getRequestDispatcher("/board/qa/boardview/result.jsp").forward(request, response); 
+
+	}
+
+}

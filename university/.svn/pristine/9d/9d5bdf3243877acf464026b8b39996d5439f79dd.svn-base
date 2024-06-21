@@ -1,0 +1,89 @@
+package noticeBoard.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import noticeBoard.service.INoticeBoardService;
+import noticeBoard.service.NoticeBoardServiceImpl;
+import noticeBoard.vo.NoticeBoardListVO;
+import noticeBoard.vo.NoticeBoardVO;
+import noticeBoard.vo.NoticePageVO;
+
+
+
+@WebServlet("/list.do")
+public class list extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		 
+
+		 StringBuffer buf=new StringBuffer();
+		 String line=null;
+		 
+		 try {
+			BufferedReader reader=request.getReader();
+			while (true) {
+				line=reader.readLine();
+				if(line==null)break;
+				buf.append(line);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 
+		String reqdata=buf.toString();
+		
+		Gson gson =new Gson();
+		 
+		NoticeBoardListVO vo=gson.fromJson(reqdata, NoticeBoardListVO.class);
+		
+		INoticeBoardService service =NoticeBoardServiceImpl.getService();
+		
+		NoticePageVO pvo =service.pageInfo(vo.getPage(), vo.getStype(), vo.getSword());
+
+		
+//		NoticeBoardVO bvo =gson.fromJson(reqdata, NoticeBoardVO.class);
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("start", pvo.getStart());
+		map.put("end", pvo.getEnd());
+		map.put("stype", vo.getStype());
+		map.put("sword", vo.getSword());
+		
+//		Map<String, Object> notice1=new HashMap<String, Object>();
+//		notice1.put("title", bvo.getBoard_title());
+//		notice1.put("date", bvo.getBoard_date());
+//		notice1.put("contente", bvo.getBoard_content());
+//		notice1.put("hit", bvo.getBoard_hit());
+//		
+		List<NoticeBoardVO> list=service.selectNotice(map);
+		
+		request.setAttribute("list", list);
+		request.setAttribute("start", pvo.getStartPage());
+		request.setAttribute("end", pvo.getEndPage());
+		request.setAttribute("total", pvo.getTotalPage());
+		
+
+		
+	
+		
+		request.getRequestDispatcher("/university/WebContent/board/nt/view/list.jsp").forward(request, response); 
+	}
+
+
+}

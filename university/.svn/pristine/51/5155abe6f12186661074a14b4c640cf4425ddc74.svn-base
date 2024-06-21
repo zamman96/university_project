@@ -1,0 +1,211 @@
+@charset "UTF-8";
+
+body {
+	font-family: var(--font-pretendard) !important;
+}
+
+.section-top {
+    font-size: var(--font-size-4xl);
+    font-weight: bold;
+}
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-center 시작 */
+.section-center {	
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 30px 30px;
+	border-radius: var(--br-xl);
+	min-width: 900px;
+	overflow: auto;
+	height: 600px;
+}
+.list-title {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    margin-bottom: 10px;
+   	display: flex;	
+    gap: 10px;
+}
+.list-title span {
+	font-size: 18px;	
+    font-weight: bold;
+}
+#insertBtn {
+	padding: 4px 8px;
+    background: #f58d39;
+    font-weight: bold;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+}
+#insertBtn:hover {
+    background: #f1842d;
+}
+.section-select{
+	display: flex;
+}
+.section-select button{
+	margin: 10px;
+	width: 80px;
+	height: 30px;
+	font-size: 1.1rem;
+}
+.select-boxs {
+	display: flex;
+	align-items: flex-end;
+    margin-bottom: 8px;
+    justify-content: space-between;
+}
+.select-boxs-left {
+	display: flex;
+	align-items: flex-end;
+	gap: 10px;
+}
+.sel-box {
+	padding: 5px 5px;
+}
+.sel-box select {
+	border: none;
+	outline: none;
+}
+.select-boxs-left{
+	display: flex;
+    padding: 8px 15px;
+    margin-bottom: 10px;
+}
+
+/* 테이블 시작 */
+.table-wrap {
+	width: 100%; 
+}
+.table-wrap table {
+	white-space: nowrap;
+	width: 100%;
+}
+.table-wrap th, td {
+	height: 50px;
+	padding: 0 var(--pd-table);
+	text-align: center;
+}
+.table-wrap th {
+	background: var(--primary-p-5);
+	text-align: center;
+}
+.table-wrap td {
+	border-top: 1px solid var(--table-td);
+	border-bottom: 1px solid var(--table-td);
+}
+thead tr {
+	position: sticky;
+	top: -1px;
+	background-color: #f9f9f9;
+	z-index: 1; /* Make sure the header stays on top */
+}
+
+/* 페이지네이션 */
+.pagination {
+	justify-content: center;
+    padding-top: 30px;	
+}
+
+/* list-items 시작 */
+.list-items {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+.item-title {
+	font-size: var(--font-size-2xl);
+	font-weight: bold;
+	padding-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+.item-content {
+	padding: 20px;
+	background-color: var(--bg-1);
+	border-radius: 10px;
+}	
+.item-btn {
+	padding: 8px 15px;
+	color: white;
+	border: none;
+	background-color: var(--primary-p-70);
+}
+.item-btn:hover {
+	background-color: var(--primary-p-60);
+}
+
+/* item-table 시작 */
+.item-lists {
+	display: flex;
+    justify-content: space-between;
+}
+.item-list {
+	width: 100%;
+	text-align: center;
+}
+.list-row {
+	color: var(--primary-p-70);
+}
+.list-colums {
+	background-color: white;
+	margin-top: 10px;	
+	padding: 10px;
+}
+.list-colum {
+	padding: 4px;
+}
+.item-lists .item-list:first-child .list-colums {
+	border-radius: 10px 0 0 10px;
+}	
+.item-lists > .item-list:last-child .list-colums {
+	border-radius: 0 10px 10px 0;
+}	
+.list-null {
+	background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    text-align: center;
+    color: var(--gray-text-disabled);
+}
+.sel-button{
+	display : flex;
+	justify-content: center;
+	margin: 20px;
+}
+.sel-button input{
+	margin: 20px;
+	width: 100px;
+	text-align : center;
+	background: var(--primary-p-70);
+	color : white;
+	font-weight: bold;
+	font-size: 1.3rem;
+}
+.sel-button input:hover{
+	background: var(--primary-p-60);
+}
+
+.caution{
+	padding: 20px;
+	text-align: center;
+	border-top: 1px solid var(--gray-text-disabled);
+	border-bottom: 1px solid var(--gray-text-disabled);
+	background-color: var(--bg-1);
+}
+.important{
+	color : var(--lecture-6-border);
+}
+textarea{
+	width: 100%;
+	font-size: 1.1rem;
+	border: none;
+}

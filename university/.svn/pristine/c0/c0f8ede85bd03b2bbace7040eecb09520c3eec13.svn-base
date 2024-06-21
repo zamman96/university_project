@@ -1,0 +1,132 @@
+package notice.service;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import board.vo.PageVO;
+import notice.dao.INoticeDao;
+import notice.dao.NoticeDaoImpl;
+import notice.vo.NoticeVO;
+import notice.vo.PaginationVO;
+
+
+public class NoticeServiceImpl implements INoticeService {
+	private INoticeDao ntDao;
+	
+	private static INoticeService ntService = new NoticeServiceImpl();
+	
+	public NoticeServiceImpl() {
+		ntDao = NoticeDaoImpl.getInstance();
+	}
+	
+	public static INoticeService getInstance() {
+		return ntService;
+	}
+
+	
+	@Override
+	public List<NoticeVO> ntSearch(Map<String, Object> map) {
+		return ntDao.ntSearch(map);
+	}
+	
+	@Override
+	public NoticeVO ntGet(int board_id) {
+		
+		return ntDao.ntGet(board_id);
+	}
+
+	@Override
+	public List<NoticeVO> ntList(Map<String, Object> map) {
+		
+		return ntDao.ntList(map);
+	}
+
+//	@Override
+//	public int countList2(String ntTit) {
+//		return ntDao.countList2(ntTit);
+//	}
+
+	@Override
+	public int ntDelete(int board_id) {
+		return ntDao.ntDelete(board_id);
+	}
+
+	@Override
+	public int ntHit(int board_id) {
+		return ntDao.ntHit(board_id);
+	}
+
+	@Override
+	public int ntUpdate(NoticeVO nv) {
+		return ntDao.ntUpdate(nv);
+	}
+
+	@Override
+	public int ntInsert(NoticeVO nv) {
+		return ntDao.ntInsert(nv);
+	}
+
+	@Override
+	public PaginationVO pageInfo(int page, String stype, String sword) {
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("stype", stype);
+		map.put("sword", sword);
+		
+		int totalCount=this.getTotalCount(map);
+		System.out.println(totalCount);
+		//전체 페이지수구하기
+		int perpage =PageVO.getPerPage();//5
+		int perlist=PageVO.getPerList();//8
+		int totalpage=(int)Math.ceil((double)totalCount/perlist);//26/8
+		
+		//스타트 앤드 구하기
+		int start=(page-1)*perlist+1;
+//		int start = (currentPage - 1) * perList + 1;
+		int end=start+perlist-1;
+//		int end = start + perList - 1;
+		if(end>totalCount) {
+			end=totalCount;
+		}
+		
+//		if(end > totalCount)
+//			end = totalCount; // 전체 글 갯수 초과시 값 조정하기
+		
+		//시작페이지 끝페이지 구하기
+		int startpage=((page-1)/perpage*perpage)+1;
+		int endpage=startpage+perpage-1;
+		if(endpage>totalpage)endpage=totalpage;
+		
+//		int startPage = ((currentPage -1) / perPage * perPage) + 1;
+////		
+//		int endPage = startPage + perPage -1;
+//		if(endPage > totalPage)
+//			endPage = totalPage; // 전체 페이지 갯수 초과 시 값 조절하기
+		
+		PaginationVO pvo=new PaginationVO();
+		pvo.setStart(start);
+		pvo.setEnd(end);
+		pvo.setStartPage(startpage);
+		pvo.setEndPage(endpage);
+		pvo.setTotalPage(totalpage);
+		
+		System.out.println("start==>"+start);
+		System.out.println("end==>"+end);
+		System.out.println("startpage==>"+startpage);
+		System.out.println("endpage==>"+endpage);
+		System.out.println("totalpage==>"+totalpage);
+		return pvo;
+		
+		
+		
+		
+	}
+
+	private int getTotalCount(Map<String, Object> map) {
+		
+		return ntDao.getTotalCount(map);
+	}
+	
+
+}

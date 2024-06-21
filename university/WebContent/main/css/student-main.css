@@ -1,0 +1,266 @@
+@charset "UTF-8";
+
+a:hover {
+	text-decoration: underline !important;
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* section-top 시작 */
+.section-top {
+	display: flex;
+	justify-content: space-between;
+}
+.section-top-left {
+	display: flex;
+	gap: 15px;
+}
+.user-img {
+	width: 60px;
+	height: 58px;
+	border-radius: 100%;
+	background-image: url(http://localhost/university/main/img/user-img.png);
+	overflow: hidden;
+}
+.user-info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.user-name {
+	font-size: var(--font-size-2xl);
+}
+.user-belong {
+	display: flex;
+	gap: 10px;
+}
+.section-top-right {
+	display: flex;
+	gap: 10px;
+}
+.section-top-right .btn {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-content: center;
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	font-size: var(--font-size-sm);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.section-top-right .btn:hover {
+    background-color: var(--primary-p-5);
+}
+.section-top-right .btn img {
+	width: 20px;
+	height: 20px;
+}
+
+/* section-center 시작 */
+.section-center {
+	display: flex;
+	gap: var(--pd-box);
+	justify-content: space-between;
+}
+.section-center-left, 
+.section-center-right .board {
+	background-color: white;
+	border: 1px solid var(--gray-line-box);
+	padding: 30px 0;
+	border-radius: var(--br-xl);
+}
+.section-title {
+	display: flex;
+	justify-content: space-between;
+    align-items: center;
+}
+.plus-section {
+	margin-right: 20px;
+	color: var(--gray-text-disabled);
+}
+.plus-section:hover a {
+	color: var(--primary-p-50);
+}
+.plus-section img{
+	vertical-align: text-top;
+}
+.plus-section:hover img{
+	filter: var(--filter-p-50);
+}
+.icon-section {
+	display: flex;
+	font-size: var(--font-size-4xl);
+	font-weight: bold;
+	align-items: center;
+}
+.question-img,
+.notification-img,
+.calendar-img{
+	border-radius: 0 20px 20px 0;
+	width: 60px; 
+	height: 60px;
+	text-align: center;
+    line-height: 55px;
+    margin-right: 10px;
+}
+.question-img img,
+.notification-img img,
+.calendar-img img {
+	width: 32px; 
+	height: 32px;
+}
+.question-img {
+	background-color: #87318B;
+}
+.notification-img {
+	background-color: #E96C81;
+}
+.calendar-img {
+	background-color: #6AB686;
+}
+
+/* 게시판 시작 */
+.section-center-right {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pd-box);
+	width: 40%;
+}
+.section-center-right .board {
+	height: 400px;
+    /* width: 600px; */
+    min-width: 400px;
+}
+.content-items {
+	padding: 30px 30px 0 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.content-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+.content-item img {
+	margin-right: 4px;
+}
+.content-item .link {
+	min-width: 100px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.content-item .link a {
+	color: var(--gray-text-body);
+}
+.content-item .link a:hover {
+	text-decoration: underline;
+}
+.content-item .data {
+	min-width: 110px
+}
+
+/* 수강시간표 시작 */
+.section-center-left {
+	width: -webkit-fill-available;
+    width: 60%;
+}
+.lecture-calendar {
+	padding: 30px 30px 0 30px;
+	display: flex;
+}
+.lecture-calendar .time {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 53px;
+    margin-top: 70px;
+}
+.lecture-calendar table {
+	width: -webkit-fill-available;
+	border-spacing: 2px;
+    border-collapse: separate;
+}
+.lecture-calendar table th {
+	font-weight: bold;
+	height: 40px;
+}
+.lecture-calendar table tbody td {
+	background-color: var(--bg-0);
+	height: 70px;
+	width: 180px;
+	text-align: center;
+}
+.lecture-1 {
+	background-color: var(--lecture-1-fill) !important;;
+	border-left: 4px solid var(--lecture-1-border);
+}
+.lecture-2 {
+	background-color: var(--lecture-2-fill) !important;;
+	border-left: 4px solid var(--lecture-2-border);
+}
+.lecture-3 {
+	background-color: var(--lecture-3-fill) !important;;
+	border-left: 4px solid var(--lecture-3-border);
+}
+.lecture-4 {
+	background-color: var(--lecture-4-fill) !important;;
+	border-left: 4px solid var(--lecture-4-border);
+}
+.lecture-5 {
+	background-color: var(--lecture-5-fill) !important;;
+	border-left: 4px solid var(--lecture-5-border);
+}
+.lecture-6 {
+	background-color: var(--lecture-6-fill) !important;;
+	border-left: 4px solid var(--lecture-6-border);
+}
+.lecture-7 {
+	background-color: var(--lecture-7-fill) !important;
+	border-left: 4px solid var(--lecture-7-border);
+}
+.lecture-8 {
+	background-color: var(--lecture-8-fill) !important;;
+	border-left: 4px solid var(--lecture-8-border);
+}
+.lecture-9 {
+	background-color: var(--lecture-9-fill) !important;;
+	border-left: 4px solid var(--lecture-9-border);
+}
+.lecture-2 {
+	background-color: var(--lecture-10-fill) !important;;
+	border-left: 4px solid var(--lecture-10-border);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

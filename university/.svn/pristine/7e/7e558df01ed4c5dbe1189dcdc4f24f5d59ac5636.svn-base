@@ -1,0 +1,38 @@
+package noticeBoard.vo;
+
+public class NoticeBoardListVO {
+	
+	private int page;
+	private String sword;
+	
+	private String stype;
+	
+	
+//	public NoticeBoardListVO(int page, String sword, String stype) {
+//		super();
+//		this.page = page;
+//		this.sword = sword;
+//		this.stype = stype;
+//	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public String getStype() {
+		return stype;
+	}
+	public void setStype(String stype) {
+		this.stype = stype;
+	}
+	public String getSword() {
+		return sword;
+	}
+	public void setSword(String sword) {
+		this.sword = sword;
+	}
+
+
+
+}

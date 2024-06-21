@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src/member/controller/StuChange.java=UTF-8
+encoding//src/member/dao/StudentDaoImpl.java=UTF-8
+encoding//src/noticeBoard/dao/NoticeBoardDaoImpl.java=UTF-8
+encoding//src/noticeBoard/service/NoticeBoardServiceImpl.java=UTF-8
